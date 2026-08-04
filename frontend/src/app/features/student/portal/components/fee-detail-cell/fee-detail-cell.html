@@ -1,0 +1,16 @@
+<button
+  type="button"
+  class="fee-cell"
+  [class.is-current]="isCurrentMonth"
+  [class.is-selected]="isSelected"
+  [class.has-record]="record"
+  (click)="cellClick.emit()"
+>
+  <span class="month-label">{{ monthLabel }}</span>
+  @if (record) {
+    <span class="amount">Rs. {{ record.amount_due }}</span>
+    <app-status-badge [status]="record.status" />
+  } @else {
+    <span class="no-record">No Record</span>
+  }
+</button>

@@ -1,0 +1,51 @@
+.fee-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  width: 100%;
+  min-height: 100px;
+  padding: 0.85rem;
+  background: var(--vn-bg);
+  border: 1px solid var(--vn-gray-200);
+  border-radius: 10px;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    border-color: var(--vn-primary);
+    box-shadow: 0 2px 8px rgba(18, 60, 133, 0.12);
+  }
+
+  &.is-selected {
+    border-color: var(--vn-accent);
+    box-shadow: 0 0 0 2px var(--vn-accent);
+  }
+
+  &.is-current .month-label::after {
+    content: '•';
+    color: var(--vn-accent);
+    margin-left: 0.35rem;
+  }
+
+  &:not(.has-record) {
+    opacity: 0.6;
+  }
+}
+
+.month-label {
+  font-weight: 700;
+  color: var(--vn-text);
+}
+
+.amount {
+  font-size: 0.85rem;
+  color: var(--vn-gray-700);
+}
+
+.no-record {
+  font-size: 0.8rem;
+  color: var(--vn-gray-500);
+}

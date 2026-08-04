@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vistanova_dev
+    ports:
+      - "5434:5432"  # host 5434 -> container 5432; host 5432/5433 are already taken by local Postgres services
+    volumes:
+      - vn_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  vn_postgres_data:

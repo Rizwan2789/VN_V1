@@ -1,0 +1,13 @@
+@if (student; as s) {
+  <div class="student-header-card">
+    <div class="avatar">{{ s.full_name.charAt(0) }}</div>
+    <div class="details">
+      <h2>{{ s.full_name }}</h2>
+      <p>Roll No. {{ s.roll_no }} &middot; Class {{ s.batch.name }}</p>
+    </div>
+    <div class="fee-summary">
+      <span class="label">Monthly Fee</span>
+      <span class="value">Rs. {{ s.monthly_fee_amount }}</span>
+    </div>
+  </div>
+}

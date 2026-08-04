@@ -1,0 +1,50 @@
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem 1rem 0;
+  background: var(--vn-bg);
+  border: 1px solid var(--vn-gray-200);
+  border-top: none;
+}
+
+.search-field {
+  flex: 1 1 260px;
+}
+
+.status-field {
+  width: 180px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.table-container {
+  background: var(--vn-bg);
+  border: 1px solid var(--vn-gray-200);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+  }
+
+  tr.mat-mdc-row:nth-child(even) {
+    background: var(--vn-gray-50);
+  }
+}
+
+.loading-row {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.empty-state {
+  padding: 2rem;
+  text-align: center;
+  color: var(--vn-gray-700);
+}

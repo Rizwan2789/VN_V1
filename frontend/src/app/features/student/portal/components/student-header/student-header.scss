@@ -1,0 +1,55 @@
+.student-header-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: var(--vn-bg);
+  border: 1px solid var(--vn-gray-200);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--vn-primary);
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.details {
+  flex: 1;
+
+  h2 {
+    margin: 0 0 0.25rem;
+    color: var(--vn-text);
+  }
+
+  p {
+    margin: 0;
+    color: var(--vn-gray-700);
+  }
+}
+
+.fee-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+
+  .label {
+    font-size: 0.75rem;
+    color: var(--vn-gray-700);
+  }
+
+  .value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--vn-primary);
+  }
+}

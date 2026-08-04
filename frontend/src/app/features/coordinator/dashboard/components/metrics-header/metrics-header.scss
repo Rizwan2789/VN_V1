@@ -1,0 +1,67 @@
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metric-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--vn-bg);
+  border: 1px solid var(--vn-gray-200);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.metric-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  flex-shrink: 0;
+
+  mat-icon {
+    color: #ffffff;
+  }
+
+  &.collected {
+    background: var(--vn-primary);
+  }
+  &.pending {
+    background: var(--vn-secondary);
+  }
+  &.overdue {
+    background: var(--vn-status-overdue);
+  }
+  &.active {
+    background: var(--vn-accent);
+  }
+}
+
+.metric-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-label {
+  font-size: 0.75rem;
+  color: var(--vn-gray-700);
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--vn-text);
+}

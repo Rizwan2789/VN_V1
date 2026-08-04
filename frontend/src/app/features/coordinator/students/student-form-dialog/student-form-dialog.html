@@ -1,0 +1,62 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Student' : 'Add New Student' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content class="form-grid">
+    <mat-form-field appearance="outline">
+      <mat-label>Full Name</mat-label>
+      <input matInput formControlName="full_name" aria-label="Full Name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Roll No.</mat-label>
+      <input matInput formControlName="roll_no" aria-label="Roll No." />
+      @if (isEdit) {
+        <mat-hint>Roll number can't be changed after creation</mat-hint>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Class / Batch</mat-label>
+      <mat-select formControlName="batch_id" aria-label="Class / Batch">
+        @for (batch of data.batches; track batch.id) {
+          <mat-option [value]="batch.id">{{ batch.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Monthly Fee (Rs.)</mat-label>
+      <input matInput type="number" formControlName="monthly_fee_amount" aria-label="Monthly Fee" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email (optional)</mat-label>
+      <input matInput type="email" formControlName="email" aria-label="Email" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Phone</mat-label>
+      <input matInput formControlName="phone" aria-label="Phone" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Guardian Name</mat-label>
+      <input matInput formControlName="guardian_name" aria-label="Guardian Name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Guardian Phone</mat-label>
+      <input matInput formControlName="guardian_phone" aria-label="Guardian Phone" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Address</mat-label>
+      <textarea matInput formControlName="address" rows="2" aria-label="Address"></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button mat-flat-button color="primary" type="submit">{{ isEdit ? 'Save Changes' : 'Create Student' }}</button>
+  </mat-dialog-actions>
+</form>

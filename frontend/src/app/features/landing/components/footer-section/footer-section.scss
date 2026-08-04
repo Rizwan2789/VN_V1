@@ -1,0 +1,30 @@
+.site-footer {
+  background: var(--vn-primary);
+  color: rgba(255, 255, 255, 0.75);
+  padding: 2rem;
+  text-align: center;
+
+  p {
+    margin: 0.5rem 0 0;
+    font-size: 0.85rem;
+  }
+}
+
+.footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--vn-accent);
+  font-size: 0.75rem;
+}

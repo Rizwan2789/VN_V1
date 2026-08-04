@@ -1,0 +1,23 @@
+// Vista Nova brand palette, exposed as CSS custom properties for components
+// that aren't Angular Material (e.g. the custom fee-calendar-grid, status badges).
+// Angular Material's own components are themed separately via mat.theme() in styles.scss.
+:root {
+  --vn-primary: #123c85;
+  --vn-accent: #d96b00;
+  --vn-secondary: #dc9d12;
+  --vn-text: #080808;
+  --vn-bg: #ffffff;
+
+  --vn-gray-50: #f7f7f8;
+  --vn-gray-100: #eeeef0;
+  --vn-gray-200: #dfe0e3;
+  --vn-gray-300: #c3c5ca;
+  --vn-gray-500: #8a8d94;
+  --vn-gray-700: #52555c;
+
+  // Fee status colors (v1 assumption — not specified in the brand brief, confirm before shipping).
+  --vn-status-paid: #1e7e34;
+  --vn-status-pending: #52555c;
+  --vn-status-partial: var(--vn-secondary);
+  --vn-status-overdue: #c62828;
+}

@@ -1,0 +1,36 @@
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-paid {
+  background: color-mix(in srgb, var(--vn-status-paid) 15%, white);
+  color: var(--vn-status-paid);
+}
+
+.status-pending {
+  background: var(--vn-gray-100);
+  color: var(--vn-status-pending);
+}
+
+.status-partial {
+  background: color-mix(in srgb, var(--vn-status-partial) 18%, white);
+  color: color-mix(in srgb, var(--vn-status-partial) 70%, black);
+}
+
+.status-overdue {
+  background: color-mix(in srgb, var(--vn-status-overdue) 15%, white);
+  color: var(--vn-status-overdue);
+}
+
+.status-none {
+  background: var(--vn-gray-100);
+  color: var(--vn-gray-500);
+}

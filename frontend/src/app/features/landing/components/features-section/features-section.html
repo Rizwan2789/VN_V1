@@ -1,0 +1,16 @@
+<section id="features" class="features">
+  <h2>Everything a fee office needs</h2>
+  <p class="features-subtitle">Built for coordinators and students alike.</p>
+
+  <div class="feature-grid">
+    @for (feature of features; track feature.title) {
+      <div class="feature-card">
+        <div class="feature-icon">
+          <mat-icon>{{ feature.icon }}</mat-icon>
+        </div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    }
+  </div>
+</section>

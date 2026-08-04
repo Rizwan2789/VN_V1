@@ -1,0 +1,21 @@
+<div class="calendar-toolbar">
+  <button mat-icon-button type="button" (click)="previousYear()" aria-label="Previous year">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+  <h3>{{ year }}</h3>
+  <button mat-icon-button type="button" (click)="nextYear()" aria-label="Next year">
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+</div>
+
+<div class="calendar-grid">
+  @for (month of months; track month) {
+    <app-fee-detail-cell
+      [monthIndex]="month"
+      [record]="recordFor(month)"
+      [isCurrentMonth]="isCurrentMonth(month)"
+      [isSelected]="selectedMonth === month"
+      (cellClick)="selectMonth(month)"
+    />
+  }
+</div>

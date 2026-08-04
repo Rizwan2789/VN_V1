@@ -1,0 +1,127 @@
+.login-shell {
+  display: flex;
+  min-height: 100vh;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
+}
+
+.branding-panel {
+  flex: 1 1 45%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background: linear-gradient(160deg, var(--vn-primary) 0%, #0a2559 100%);
+  color: #ffffff;
+
+  .brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--vn-accent);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    font-size: 2.25rem;
+    margin: 0 0 0.5rem;
+  }
+
+  .tagline {
+    color: var(--vn-secondary);
+    font-weight: 600;
+    margin: 0 0 1.5rem;
+  }
+
+  .description {
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .highlights {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    li {
+      padding-left: 1.5rem;
+      position: relative;
+      color: rgba(255, 255, 255, 0.9);
+
+      &::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: var(--vn-secondary);
+        font-weight: 700;
+      }
+    }
+  }
+
+  .branding-content {
+    max-width: 440px;
+  }
+}
+
+.form-panel {
+  flex: 1 1 55%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--vn-bg);
+}
+
+.form-card {
+  width: 100%;
+  max-width: 400px;
+
+  h2 {
+    margin: 0 0 0.25rem;
+    color: var(--vn-text);
+  }
+
+  .form-subtitle {
+    color: var(--vn-gray-700);
+    margin: 0 0 1.5rem;
+  }
+}
+
+.role-tabs {
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--vn-gray-200);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.error-message {
+  color: var(--vn-status-overdue);
+  margin: -0.5rem 0 1rem;
+  font-size: 0.875rem;
+}
+
+.submit-button {
+  width: 100%;
+  height: 44px;
+  margin-top: 0.5rem;
+}
