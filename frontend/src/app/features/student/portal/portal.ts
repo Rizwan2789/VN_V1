@@ -1,23 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 
-import { FeeRecordWithPayments } from '../../../core/models/fee-record.model';
+import { FeeRecordWithPayments, MonthSelection } from '../../../core/models/fee-record.model';
 import { Student } from '../../../core/models/student.model';
 import { AppHeader } from '../../../shared/components/app-header/app-header';
-import { StatusBadge } from '../../../shared/components/status-badge/status-badge';
-import { FeeCalendarGrid, MonthSelection } from './components/fee-calendar-grid/fee-calendar-grid';
+import { FeeMonthDetail, ReceiptDownload } from '../../../shared/components/fee-month-detail/fee-month-detail';
+import { FeeTimeline } from '../../../shared/components/fee-timeline/fee-timeline';
+import { FeeCalendarGrid } from './components/fee-calendar-grid/fee-calendar-grid';
 import { StudentHeader } from './components/student-header/student-header';
 import { StudentPortalService } from '../services/student-portal.service';
 
-const MONTH_NAMES = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
-
 @Component({
   selector: 'app-portal',
-  imports: [MatButtonModule, MatIconModule, AppHeader, StudentHeader, FeeCalendarGrid, StatusBadge],
+  imports: [AppHeader, StudentHeader, FeeTimeline, FeeCalendarGrid, FeeMonthDetail],
   templateUrl: './portal.html',
   styleUrl: './portal.scss',
 })
@@ -56,11 +50,7 @@ export class Portal {
     this.selection.set(selection);
   }
 
-  monthName(month: number): string {
-    return MONTH_NAMES[month - 1];
-  }
-
-  downloadReceipt(paymentId: number, receiptNumber: string): void {
-    this.portalService.downloadReceipt(paymentId, receiptNumber);
+  downloadReceipt(event: ReceiptDownload): void {
+    this.portalService.downloadReceipt(event.paymentId, event.receiptNumber);
   }
 }

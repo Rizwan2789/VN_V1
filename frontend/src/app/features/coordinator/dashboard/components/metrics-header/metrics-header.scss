@@ -12,14 +12,10 @@
   }
 }
 
-.metric-card {
+.metric-card__inner {
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: var(--vn-bg);
-  border: 1px solid var(--vn-gray-200);
-  border-radius: 12px;
-  padding: 1.25rem;
 }
 
 .metric-icon {
@@ -28,7 +24,7 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  border-radius: 12px;
+  border-radius: var(--vn-radius-card);
   flex-shrink: 0;
 
   mat-icon {

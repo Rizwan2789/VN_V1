@@ -1,6 +1,23 @@
 <header class="app-header">
   <div class="brand">
-    <span class="brand-mark">VN</span>
+    @if (showBack) {
+      <button mat-icon-button class="back-button" type="button" (click)="goBack()" aria-label="Go back">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    } @else {
+      @if (showMenuToggle) {
+        <button
+          mat-icon-button
+          class="menu-toggle"
+          type="button"
+          (click)="sidenavService.toggle()"
+          aria-label="Toggle navigation menu"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+      <span class="brand-mark">VN</span>
+    }
     <div class="brand-text">
       <span class="brand-name">Vista Nova</span>
       <span class="page-title">{{ title }}</span>

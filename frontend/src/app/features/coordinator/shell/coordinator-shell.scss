@@ -1,0 +1,72 @@
+.shell-container {
+  height: 100vh;
+}
+
+.shell-sidenav {
+  width: 260px;
+  background: var(--vn-primary);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  border: none;
+}
+
+.shell-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1.25rem;
+  flex-shrink: 0;
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--vn-radius-sm);
+  background: var(--vn-accent);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+mat-nav-list {
+  padding-top: 0.5rem;
+
+  a[mat-list-item] {
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0.15rem 0.75rem;
+    border-radius: var(--vn-radius-sm);
+
+    mat-icon {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    &.is-active {
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      font-weight: 600;
+
+      mat-icon {
+        color: var(--vn-secondary);
+      }
+    }
+
+    &:hover:not(.is-active) {
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+}
+
+.shell-content {
+  background: var(--vn-gray-50);
+}

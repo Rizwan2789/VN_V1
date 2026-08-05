@@ -24,7 +24,7 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  border-radius: 8px;
+  border-radius: var(--vn-radius-sm);
   background: var(--vn-accent);
   font-size: 0.75rem;
 }

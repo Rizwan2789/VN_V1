@@ -1,0 +1,12 @@
+.students-page-content {
+  padding: 1.5rem;
+  min-height: calc(100vh - 64px);
+}
+
+.table-card {
+  background: var(--vn-bg);
+  border: 1px solid var(--vn-gray-200);
+  border-radius: var(--vn-radius-card);
+  box-shadow: var(--vn-elevation-1);
+  padding: 1.5rem;
+}

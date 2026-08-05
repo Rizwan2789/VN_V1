@@ -55,7 +55,7 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  border-radius: 12px;
+  border-radius: var(--vn-radius-card);
   background: color-mix(in srgb, var(--vn-primary) 10%, white);
   margin-bottom: 1.25rem;
 

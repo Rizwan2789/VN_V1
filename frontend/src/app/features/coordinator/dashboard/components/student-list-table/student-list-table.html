@@ -7,7 +7,7 @@
       (ngModelChange)="searchTermChange.emit($event)"
       aria-label="Search students"
     />
-    <mat-icon matSuffix>search</mat-icon>
+    <mat-icon matSuffix class="vn-icon-sm">search</mat-icon>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="status-field">
@@ -63,19 +63,19 @@
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let student">
           <button mat-icon-button type="button" [matMenuTriggerFor]="rowMenu" [attr.aria-label]="'Actions for ' + student.full_name">
-            <mat-icon>more_vert</mat-icon>
+            <mat-icon class="vn-icon-sm">more_vert</mat-icon>
           </button>
           <mat-menu #rowMenu="matMenu">
             <button mat-menu-item type="button" (click)="editStudent.emit(student)">
-              <mat-icon>edit</mat-icon>
+              <mat-icon class="vn-icon-sm">edit</mat-icon>
               <span>Edit Profile</span>
             </button>
             <button mat-menu-item type="button" (click)="manageFees.emit(student)">
-              <mat-icon>receipt_long</mat-icon>
+              <mat-icon class="vn-icon-sm">receipt_long</mat-icon>
               <span>Manage Fees</span>
             </button>
             <button mat-menu-item type="button" (click)="deactivateStudent.emit(student)">
-              <mat-icon>person_off</mat-icon>
+              <mat-icon class="vn-icon-sm">person_off</mat-icon>
               <span>Deactivate</span>
             </button>
           </mat-menu>

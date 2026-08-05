@@ -1,26 +1,5 @@
-<app-app-header title="Coordinator Dashboard" />
+<app-app-header title="Coordinator Dashboard" [showMenuToggle]="true" />
 
 <main class="dashboard-content">
-  <app-metrics-header [metrics]="metrics()" />
-
-  <section class="students-section">
-    <app-class-tabs
-      [batches]="batches()"
-      [breakdown]="metrics()?.batch_breakdown ?? []"
-      (batchSelected)="onBatchSelected($event)"
-    />
-
-    <app-student-list-table
-      [students]="students()"
-      [loading]="studentsLoading()"
-      [searchTerm]="searchTerm"
-      [statusFilter]="statusFilter"
-      (searchTermChange)="onSearchTermChange($event)"
-      (statusFilterChange)="onStatusFilterChange($event)"
-      (addStudent)="openAddStudent()"
-      (editStudent)="editStudent($event)"
-      (manageFees)="manageFees($event)"
-      (deactivateStudent)="deactivateStudent($event)"
-    />
-  </section>
+  <app-metrics-header [metrics]="metrics()" (metricClick)="onMetricClick($event)" />
 </main>

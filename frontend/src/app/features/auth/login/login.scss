@@ -27,6 +27,7 @@
     font-weight: 700;
     font-size: 1.25rem;
     margin-bottom: 1.5rem;
+    box-shadow: var(--vn-elevation-2);
   }
 
   h1 {
@@ -100,9 +101,15 @@
 
 .role-tabs {
   margin-bottom: 1.5rem;
-  border-radius: 8px;
+  border-radius: var(--vn-radius-sm);
   overflow: hidden;
   border: 1px solid var(--vn-gray-200);
+  box-shadow: var(--vn-elevation-1);
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--vn-elevation-2);
+  }
 }
 
 .login-form {
@@ -112,6 +119,11 @@
   mat-form-field {
     width: 100%;
   }
+}
+
+.field-icon {
+  color: var(--vn-gray-500);
+  margin-right: 0.5rem;
 }
 
 .error-message {
@@ -124,4 +136,10 @@
   width: 100%;
   height: 44px;
   margin-top: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .role-tabs {
+    transition: none;
+  }
 }

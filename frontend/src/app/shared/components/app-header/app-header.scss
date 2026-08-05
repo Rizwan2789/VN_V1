@@ -33,6 +33,21 @@
   flex-shrink: 0;
 }
 
+.back-button {
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.menu-toggle {
+  display: none;
+  color: #ffffff;
+  flex-shrink: 0;
+
+  @media (max-width: 900px) {
+    display: inline-flex;
+  }
+}
+
 .brand-text {
   display: flex;
   flex-direction: column;

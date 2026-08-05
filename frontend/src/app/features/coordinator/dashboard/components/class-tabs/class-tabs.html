@@ -1,5 +1,0 @@
-<mat-tab-group class="class-tabs" mat-stretch-tabs="false" (selectedIndexChange)="onTabChange($event)">
-  @for (batch of batches; track batch.id) {
-    <mat-tab [label]="batch.name + ' (' + countFor(batch.id) + ')'" />
-  }
-</mat-tab-group>

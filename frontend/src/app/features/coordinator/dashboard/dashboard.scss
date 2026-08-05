@@ -1,13 +1,4 @@
 .dashboard-content {
   padding: 1.5rem;
-  background: var(--vn-gray-50);
   min-height: calc(100vh - 64px);
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.students-section {
-  display: flex;
-  flex-direction: column;
 }

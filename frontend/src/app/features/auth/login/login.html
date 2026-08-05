@@ -29,6 +29,9 @@
       <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
         <mat-form-field appearance="outline">
           <mat-label>{{ selectedRole() === 'coordinator' ? 'Email' : 'Roll Number' }}</mat-label>
+          <mat-icon matPrefix class="vn-icon-sm field-icon">{{
+            selectedRole() === 'coordinator' ? 'mail' : 'badge'
+          }}</mat-icon>
           <input
             matInput
             formControlName="loginId"
@@ -39,6 +42,7 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Password</mat-label>
+          <mat-icon matPrefix class="vn-icon-sm field-icon">lock</mat-icon>
           <input
             matInput
             [type]="hidePassword() ? 'password' : 'text'"
@@ -53,7 +57,7 @@
             (click)="hidePassword.set(!hidePassword())"
             [attr.aria-label]="'Toggle password visibility'"
           >
-            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            <mat-icon class="vn-icon-sm">{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
         </mat-form-field>
 
@@ -61,7 +65,14 @@
           <p class="error-message">{{ error }}</p>
         }
 
-        <button mat-flat-button color="primary" type="submit" class="submit-button" [disabled]="isSubmitting()">
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="submit-button"
+          appHoverLift
+          [disabled]="isSubmitting()"
+        >
           {{ isSubmitting() ? 'Signing in…' : 'Sign In to Dashboard' }}
         </button>
       </form>

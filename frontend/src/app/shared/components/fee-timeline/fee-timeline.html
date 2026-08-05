@@ -1,0 +1,17 @@
+<div class="fee-timeline">
+  <div class="fee-timeline__track">
+    @for (month of months; track month) {
+      <button
+        type="button"
+        class="fee-timeline__segment"
+        [class]="statusClass(month)"
+        [class.is-selected]="selectedMonth === month"
+        [attr.aria-label]="monthAbbr[month - 1] + ' ' + year"
+        [attr.aria-pressed]="selectedMonth === month"
+        (click)="selectMonth(month)"
+      >
+        {{ monthAbbr[month - 1] }}
+      </button>
+    }
+  </div>
+</div>

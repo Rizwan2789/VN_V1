@@ -10,7 +10,7 @@ from app.core.dependencies import get_current_user, get_db, require_role
 from app.models.fee_record import FeeRecord
 from app.models.student import Student
 from app.models.user import User
-from app.schemas.fee_record import FeeRecordResponse, FeeRecordWithPaymentsResponse
+from app.schemas.fee_record import FeeRecordWithPaymentsResponse
 from app.schemas.student import (
     StudentCreate,
     StudentCreatedResponse,
@@ -207,16 +207,18 @@ async def deactivate_student(
     await db.commit()
 
 
-@router.get("/{student_id}/fees", response_model=list[FeeRecordResponse])
+@router.get("/{student_id}/fees", response_model=list[FeeRecordWithPaymentsResponse])
 async def get_student_fees(
     student_id: int,
+    year: int = Query(...),
     db: AsyncSession = Depends(get_db),
     _=Depends(require_role("coordinator")),
 ) -> list[FeeRecord]:
     await _get_student_or_404(db, student_id)
     result = await db.execute(
         select(FeeRecord)
-        .where(FeeRecord.student_id == student_id)
-        .order_by(FeeRecord.period_year.desc(), FeeRecord.period_month.desc())
+        .options(selectinload(FeeRecord.payments))
+        .where(FeeRecord.student_id == student_id, FeeRecord.period_year == year)
+        .order_by(FeeRecord.period_month)
     )
     return list(result.scalars().all())

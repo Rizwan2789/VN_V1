@@ -1,0 +1,83 @@
+<app-app-header title="Student Fee Ledger" [showBack]="true" />
+
+<main class="fee-page-content">
+  <app-student-header [student]="student()" />
+
+  @if (!loading() && !hasCurrentMonthRecord) {
+    <button mat-stroked-button color="primary" type="button" class="generate-btn" (click)="generateCurrentMonth()">
+      <mat-icon>add_circle</mat-icon>
+      Generate This Month's Fee Record
+    </button>
+  }
+
+  <section class="ledger-section">
+    <div class="ledger-card">
+      <h3>Fee History</h3>
+      <app-fee-timeline
+        [records]="fees()"
+        [year]="year()"
+        [selectedMonth]="selection()?.month ?? null"
+        (monthSelected)="onMonthSelected($event)"
+      />
+      <app-fee-calendar-grid
+        [records]="fees()"
+        [year]="year()"
+        [selectedMonth]="selection()?.month ?? null"
+        (yearChange)="onYearChange($event)"
+        (monthSelected)="onMonthSelected($event)"
+      />
+    </div>
+
+    @if (selection(); as sel) {
+      <app-fee-month-detail
+        [month]="sel.month"
+        [year]="year()"
+        [record]="sel.record"
+        (downloadReceipt)="downloadReceipt($event)"
+      >
+        @if (sel.record && sel.record.status !== 'PAID') {
+          <div detail-actions>
+            @if (!recordingPayment()) {
+              <button mat-button color="primary" type="button" (click)="startPayment()">
+                <mat-icon class="vn-icon-sm">payments</mat-icon>
+                Record Payment
+              </button>
+            } @else {
+              <form [formGroup]="paymentForm" (ngSubmit)="submitPayment()" class="payment-form">
+                <h4>Record Payment</h4>
+                <div class="payment-fields">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Amount (Rs.)</mat-label>
+                    <input matInput type="number" formControlName="amount" aria-label="Amount" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Payment Method</mat-label>
+                    <input
+                      matInput
+                      formControlName="payment_method"
+                      placeholder="Cash, bank transfer…"
+                      aria-label="Payment Method"
+                    />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Notes</mat-label>
+                    <input matInput formControlName="transaction_notes" aria-label="Notes" />
+                  </mat-form-field>
+                </div>
+                @if (errorMessage(); as error) {
+                  <p class="error-message">{{ error }}</p>
+                }
+                <div class="payment-actions">
+                  <button mat-button type="button" (click)="cancelPayment()">Cancel</button>
+                  <button mat-flat-button color="primary" type="submit" [disabled]="submitting()">
+                    {{ submitting() ? 'Recording…' : 'Confirm Payment' }}
+                  </button>
+                </div>
+              </form>
+            }
+          </div>
+        }
+      </app-fee-month-detail>
+    }
+  </section>
+</main>

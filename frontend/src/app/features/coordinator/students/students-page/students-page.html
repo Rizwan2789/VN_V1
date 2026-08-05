@@ -1,0 +1,18 @@
+<app-app-header title="Students" [showMenuToggle]="true" />
+
+<main class="students-page-content">
+  <div class="table-card">
+    <app-student-list-table
+      [students]="students()"
+      [loading]="studentsLoading()"
+      [searchTerm]="searchTerm"
+      [statusFilter]="statusFilter"
+      (searchTermChange)="onSearchTermChange($event)"
+      (statusFilterChange)="onStatusFilterChange($event)"
+      (addStudent)="openAddStudent()"
+      (editStudent)="editStudent($event)"
+      (manageFees)="manageFees($event)"
+      (deactivateStudent)="deactivateStudent($event)"
+    />
+  </div>
+</main>

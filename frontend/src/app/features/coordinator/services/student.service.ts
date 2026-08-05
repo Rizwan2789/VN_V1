@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
-import { FeeRecord } from '../../../core/models/fee-record.model';
+import { FeeRecordWithPayments } from '../../../core/models/fee-record.model';
 import {
   Student,
   StudentCreate,
@@ -52,7 +52,20 @@ export class StudentService {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
-  getFees(id: number): Observable<FeeRecord[]> {
-    return this.http.get<FeeRecord[]>(`${this.baseUrl}/${id}/fees`);
+  getFees(id: number, year: number): Observable<FeeRecordWithPayments[]> {
+    return this.http.get<FeeRecordWithPayments[]>(`${this.baseUrl}/${id}/fees`, { params: { year } });
+  }
+
+  downloadReceipt(paymentId: number, receiptNumber: string): void {
+    this.http
+      .get(`${environment.apiBaseUrl}/api/payments/${paymentId}/receipt`, { responseType: 'blob' })
+      .subscribe((blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${receiptNumber}.pdf`;
+        link.click();
+        URL.revokeObjectURL(url);
+      });
   }
 }
