@@ -1,14 +1,28 @@
 <div class="class-cards-grid">
   @for (item of breakdown; track item.batch_id) {
-    <app-card [clickable]="true" appHoverLift (cardClick)="openClass(item.batch_id)">
+    <app-card
+      class="class-card"
+      [clickable]="true"
+      appHoverLift
+      [style.--class-color]="classColor(item)"
+      (cardClick)="openClass(item.batch_id)"
+    >
       <div class="class-card__header">
         <h3>{{ item.batch_name }}</h3>
-        @if (item.overdue_count > 0) {
-          <span class="overdue-badge">
-            <mat-icon class="vn-icon-sm">warning</mat-icon>
-            {{ item.overdue_count }} overdue
-          </span>
-        }
+        <div class="class-card__badges">
+          @if (item.overdue_count > 0) {
+            <span class="overdue-badge">
+              <mat-icon class="vn-icon-sm">warning</mat-icon>
+              {{ item.overdue_count }} overdue
+            </span>
+          }
+          @if (item.no_record_count > 0) {
+            <span class="no-record-badge">
+              <mat-icon class="vn-icon-sm">receipt_long</mat-icon>
+              {{ item.no_record_count }} not invoiced
+            </span>
+          }
+        </div>
       </div>
       <p class="class-card__meta">{{ item.total_students }} student{{ item.total_students === 1 ? '' : 's' }}</p>
 
@@ -18,7 +32,7 @@
           <span class="stat-label">Paid</span>
         </div>
         <div class="stat">
-          <span class="stat-value pending">{{ item.pending_count }}</span>
+          <span class="stat-value">{{ item.pending_count }}</span>
           <span class="stat-label">Pending</span>
         </div>
         <div class="stat">

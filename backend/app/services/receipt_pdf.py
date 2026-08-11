@@ -7,6 +7,8 @@ from reportlab.pdfgen import canvas
 from app.models.payment import Payment
 from app.models.student import Student
 
+PAYMENT_METHOD_LABELS = {"CASH": "Cash", "BANK_TRANSFER": "Bank Transfer", "ONLINE": "Online"}
+
 
 def generate_receipt_pdf(payment: Payment, student: Student) -> bytes:
     buffer = BytesIO()
@@ -27,7 +29,7 @@ def generate_receipt_pdf(payment: Payment, student: Student) -> bytes:
         f"Batch: {student.batch.name}",
         f"Billing Period: {fee_record.period_month:02d}/{fee_record.period_year}",
         f"Amount Paid: Rs. {payment.amount}",
-        f"Payment Method: {payment.payment_method or '-'}",
+        f"Payment Method: {PAYMENT_METHOD_LABELS.get(payment.payment_method, payment.payment_method) or '-'}",
         f"Notes: {payment.transaction_notes or '-'}",
     ]
 

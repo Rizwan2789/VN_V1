@@ -7,6 +7,7 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { Batch } from '../../../../core/models/batch.model';
 import { StudentListItem } from '../../../../core/models/student.model';
 import { AppHeader } from '../../../../shared/components/app-header/app-header';
+import { downloadCsv } from '../../../../shared/utils/csv';
 import { BatchService } from '../../services/batch.service';
 import { StudentService } from '../../services/student.service';
 import { StudentFormDialog, StudentFormDialogData } from '../student-form-dialog/student-form-dialog';
@@ -56,10 +57,10 @@ export class StudentsPage {
   private loadStudents(): void {
     this.studentsLoading.set(true);
     this.studentService
-      .list({ status: this.statusFilter ?? undefined, search: this.searchTerm || undefined })
+      .listAll({ status: this.statusFilter ?? undefined, search: this.searchTerm || undefined })
       .subscribe({
-        next: (response) => {
-          this.students.set(response.items);
+        next: (items) => {
+          this.students.set(items);
           this.studentsLoading.set(false);
         },
         error: () => this.studentsLoading.set(false),
@@ -132,5 +133,17 @@ export class StudentsPage {
   deactivateStudent(item: StudentListItem): void {
     if (!confirm(`Deactivate ${item.full_name}? They will no longer be able to log in.`)) return;
     this.studentService.deactivate(item.id).subscribe(() => this.refreshAfterMutation());
+  }
+
+  exportCsv(): void {
+    this.studentService
+      .listAll({ status: this.statusFilter ?? undefined, search: this.searchTerm || undefined })
+      .subscribe((items) => {
+        downloadCsv(
+          'students.csv',
+          ['Roll No.', 'Name', 'Class', 'Monthly Fee', 'This Month Status'],
+          items.map((s) => [s.roll_no, s.full_name, s.batch.name, s.monthly_fee_amount, s.current_status ?? 'No Record']),
+        );
+      });
   }
 }

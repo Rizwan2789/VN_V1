@@ -1,14 +1,24 @@
 .class-cards-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 1rem;
+}
 
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+// Identity stripe, keyed to --class-color set inline per card. Separate
+// vocabulary from the paid/pending/overdue colors below — this says
+// "which class," not "what status."
+app-card.class-card {
+  position: relative;
+  overflow: hidden;
 
-  @media (max-width: 560px) {
-    grid-template-columns: 1fr;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--class-color, var(--vn-gray-300));
   }
 }
 
@@ -25,6 +35,13 @@
   }
 }
 
+.class-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.35rem;
+}
+
 .overdue-badge {
   display: inline-flex;
   align-items: center;
@@ -34,6 +51,20 @@
   color: var(--vn-status-overdue);
   background: color-mix(in srgb, var(--vn-status-overdue) 15%, white);
   padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.no-record-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--vn-gray-700);
+  background: var(--vn-gray-100);
+  border: 1px dashed var(--vn-gray-300);
+  padding: 0.1rem 0.5rem;
   border-radius: 999px;
   white-space: nowrap;
 }
@@ -63,10 +94,6 @@
 
   &.paid {
     color: var(--vn-status-paid);
-  }
-
-  &.pending {
-    color: var(--vn-secondary);
   }
 }
 

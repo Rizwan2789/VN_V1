@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 import { revealOnScroll } from '../../animations/hero.animations';
+import { HoverLiftDirective } from '../../../../shared/directives/hover-lift.directive';
 
 interface Feature {
   icon: string;
@@ -11,7 +12,7 @@ interface Feature {
 
 @Component({
   selector: 'app-features-section',
-  imports: [MatIconModule],
+  imports: [MatIconModule, HoverLiftDirective],
   templateUrl: './features-section.html',
   styleUrl: './features-section.scss',
 })

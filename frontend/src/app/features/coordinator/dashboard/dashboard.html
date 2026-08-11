@@ -2,4 +2,29 @@
 
 <main class="dashboard-content">
   <app-metrics-header [metrics]="metrics()" (metricClick)="onMetricClick($event)" />
+
+  @if (classesMissingInvoices().length > 0) {
+    <div class="invoice-banner">
+      <mat-icon>notification_important</mat-icon>
+      <div class="invoice-banner__text">
+        <strong>{{ classesMissingInvoices().length }}</strong>
+        class{{ classesMissingInvoices().length === 1 ? '' : 'es' }} still
+        need{{ classesMissingInvoices().length === 1 ? 's' : '' }} this month's invoices generated.
+      </div>
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        [disabled]="generatingInvoices()"
+        (click)="generateAllInvoices()"
+      >
+        {{ generatingInvoices() ? 'Generating…' : "Generate This Month's Invoices" }}
+      </button>
+    </div>
+  }
+
+  <section class="attention-section">
+    <h2>Classes Needing Attention</h2>
+    <app-class-cards [breakdown]="classBreakdown()" />
+  </section>
 </main>

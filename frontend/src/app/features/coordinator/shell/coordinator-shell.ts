@@ -8,6 +8,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { map } from 'rxjs';
 
 import { SidenavService } from '../../../shared/services/sidenav.service';
+import { Logo } from '../../../shared/components/logo/logo';
 
 interface NavItem {
   label: string;
@@ -26,7 +27,7 @@ const MOBILE_BREAKPOINT = '(max-width: 900px)';
  */
 @Component({
   selector: 'app-coordinator-shell',
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, MatIconModule, MatListModule, MatSidenavModule],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, MatIconModule, MatListModule, MatSidenavModule, Logo],
   templateUrl: './coordinator-shell.html',
   styleUrl: './coordinator-shell.scss',
 })

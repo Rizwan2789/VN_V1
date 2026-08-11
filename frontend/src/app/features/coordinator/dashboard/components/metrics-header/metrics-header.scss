@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
+  align-items: stretch;
 
   @media (max-width: 900px) {
     grid-template-columns: repeat(2, 1fr);
@@ -12,10 +13,19 @@
   }
 }
 
+// Element + class beats the Card component's own `:host { display: block }`
+// on specificity, so this reliably wins regardless of load order.
+app-card.metric-card {
+  display: flex;
+  height: 100%;
+}
+
 .metric-card__inner {
   display: flex;
   align-items: center;
   gap: 1rem;
+  width: 100%;
+  position: relative;
 }
 
 .metric-icon {
@@ -34,8 +44,10 @@
   &.collected {
     background: var(--vn-primary);
   }
+  // Neutral, not secondary — "pending" shouldn't sit in the same color
+  // family as "paid" on a dashboard built to tell them apart at a glance.
   &.pending {
-    background: var(--vn-secondary);
+    background: var(--vn-gray-700);
   }
   &.overdue {
     background: var(--vn-status-overdue);
@@ -60,4 +72,28 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--vn-text);
+}
+
+.metric-card__chevron {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--vn-gray-300);
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+app-card.metric-card:hover .metric-card__chevron {
+  color: var(--vn-primary);
+  transform: translateY(-50%) translateX(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metric-card__chevron {
+    transition: none;
+  }
+
+  app-card.metric-card:hover .metric-card__chevron {
+    transform: translateY(-50%);
+  }
 }

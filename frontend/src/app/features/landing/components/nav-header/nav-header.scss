@@ -1,0 +1,125 @@
+.nav-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  height: 84px;
+  padding: 0 2rem;
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--vn-gray-200);
+
+  @media (max-width: 560px) {
+    padding: 0 1.25rem;
+  }
+}
+
+.nav-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  flex-shrink: 0;
+  border-radius: var(--vn-radius-sm);
+  transition: transform 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--vn-accent);
+    outline-offset: 4px;
+  }
+}
+
+.nav-brand-name {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--vn-primary);
+
+  @media (max-width: 480px) {
+    display: none;
+  }
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex: 1;
+  justify-content: center;
+
+  a {
+    position: relative;
+    color: var(--vn-gray-700);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.25rem 0;
+    transition: color 0.15s ease;
+
+    // Underline grows from center on hover/focus instead of a hard color swap.
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -2px;
+      width: 100%;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--vn-accent);
+      transform: translateX(-50%) scaleX(0);
+      transition: transform 0.2s ease;
+    }
+
+    &:hover,
+    &:focus-visible {
+      color: var(--vn-primary);
+
+      &::after {
+        transform: translateX(-50%) scaleX(1);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--vn-accent);
+      outline-offset: 4px;
+      border-radius: 2px;
+    }
+  }
+
+  @media (max-width: 720px) {
+    display: none;
+  }
+}
+
+.nav-cta {
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--vn-elevation-1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-brand,
+  .nav-links a,
+  .nav-cta {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}

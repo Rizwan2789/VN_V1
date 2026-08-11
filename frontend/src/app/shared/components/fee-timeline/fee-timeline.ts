@@ -39,4 +39,16 @@ export class FeeTimeline {
   selectMonth(month: number): void {
     this.monthSelected.emit({ month, record: this.recordFor(month) });
   }
+
+    isCurrentMonth(month: number): boolean {
+    const now = new Date();
+    return this.year === now.getFullYear() && month === now.getMonth() + 1;
+  }
+
+  tooltipFor(month: number): string {
+    const record = this.recordFor(month);
+    if (!record) return `${this.monthAbbr[month - 1]} ${this.year} — no record`;
+    return `${this.monthAbbr[month - 1]} ${this.year} — ${record.status} · Due Rs. ${record.amount_due}, Paid Rs. ${record.amount_paid}`;
+  }
+  
 }

@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from decimal import Decimal
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -7,7 +8,7 @@ from pydantic import BaseModel, Field
 class PaymentCreate(BaseModel):
     amount: Decimal = Field(gt=0)
     payment_date: date | None = None
-    payment_method: str | None = None
+    payment_method: Literal["CASH", "BANK_TRANSFER", "ONLINE"] | None = None
     transaction_notes: str | None = None
 
 

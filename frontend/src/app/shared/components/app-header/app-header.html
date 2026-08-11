@@ -16,7 +16,7 @@
           <mat-icon>menu</mat-icon>
         </button>
       }
-      <span class="brand-mark">VN</span>
+      <app-logo [size]="46" [ring]="true" class="brand-mark" />
     }
     <div class="brand-text">
       <span class="brand-name">Vista Nova</span>
@@ -25,8 +25,12 @@
   </div>
 
   <button class="user-menu-trigger" mat-button [matMenuTriggerFor]="menu" type="button">
-    <span class="user-name">{{ authService.currentUser()?.fullName }}</span>
-    <mat-icon>account_circle</mat-icon>
+    <span class="user-avatar">{{ userInitials }}</span>
+    <span class="user-info">
+      <span class="user-name">{{ authService.currentUser()?.fullName }}</span>
+      <span class="user-role">{{ authService.currentUser()?.role }}</span>
+    </span>
+    <mat-icon class="vn-icon-sm chevron">expand_more</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
     <button mat-menu-item type="button" (click)="logout()">

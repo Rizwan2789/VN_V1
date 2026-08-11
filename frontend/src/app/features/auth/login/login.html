@@ -1,7 +1,7 @@
 <div class="login-shell">
   <section class="branding-panel">
     <div class="branding-content">
-      <div class="brand-mark">VN</div>
+      <app-logo [size]="104" [ring]="true" class="brand-mark" />
       <h1>Vista Nova</h1>
       <p class="tagline">Academic Excellence Platform</p>
       <p class="description">
@@ -9,9 +9,18 @@
         coordinators and students.
       </p>
       <ul class="highlights">
-        <li>Track fee collection across every class, 9th through 12th</li>
-        <li>Give every student a clear, calendar-style view of their fee history</li>
-        <li>Generate receipts the moment a payment is recorded</li>
+        <li>
+          <span class="highlight-icon"><mat-icon class="vn-icon-sm">fact_check</mat-icon></span>
+          <span>Track fee collection across every class, 9th through 12th</span>
+        </li>
+        <li>
+          <span class="highlight-icon"><mat-icon class="vn-icon-sm">calendar_month</mat-icon></span>
+          <span>Give every student a clear, calendar-style view of their fee history</span>
+        </li>
+        <li>
+          <span class="highlight-icon"><mat-icon class="vn-icon-sm">receipt_long</mat-icon></span>
+          <span>Generate receipts the moment a payment is recorded</span>
+        </li>
       </ul>
     </div>
   </section>
@@ -22,8 +31,16 @@
       <p class="form-subtitle">Please select your role and sign in to continue.</p>
 
       <mat-tab-group class="role-tabs" (selectedIndexChange)="onRoleTabChange($event)" mat-stretch-tabs="true">
-        <mat-tab label="Coordinator" />
-        <mat-tab label="Student" />
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span class="tab-label"><mat-icon class="vn-icon-sm">supervisor_account</mat-icon>Coordinator</span>
+          </ng-template>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span class="tab-label"><mat-icon class="vn-icon-sm">school</mat-icon>Student</span>
+          </ng-template>
+        </mat-tab>
       </mat-tab-group>
 
       <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
@@ -62,7 +79,10 @@
         </mat-form-field>
 
         @if (errorMessage(); as error) {
-          <p class="error-message">{{ error }}</p>
+          <p class="error-message">
+            <mat-icon class="vn-icon-sm">error_outline</mat-icon>
+            <span>{{ error }}</span>
+          </p>
         }
 
         <button
@@ -73,7 +93,10 @@
           appHoverLift
           [disabled]="isSubmitting()"
         >
-          {{ isSubmitting() ? 'Signing in…' : 'Sign In to Dashboard' }}
+          {{ isSubmitting() ? 'Signing in…' : 'Sign In' }}
+          @if (!isSubmitting()) {
+            <mat-icon class="vn-icon-sm">arrow_forward</mat-icon>
+          }
         </button>
       </form>
     </div>

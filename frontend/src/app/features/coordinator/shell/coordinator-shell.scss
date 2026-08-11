@@ -1,5 +1,6 @@
 .shell-container {
   height: 100vh;
+  height: 100dvh; // avoids the mobile address-bar resize jump; ignored by browsers that don't support dvh
 }
 
 .shell-sidenav {
@@ -9,6 +10,8 @@
   display: flex;
   flex-direction: column;
   border: none;
+  border-radius: 0;
+  --mat-sidenav-container-shape: 0;
 }
 
 .shell-brand {
@@ -20,16 +23,6 @@
 }
 
 .brand-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--vn-radius-sm);
-  background: var(--vn-accent);
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 0.9rem;
   flex-shrink: 0;
 }
 
@@ -42,31 +35,63 @@
 mat-nav-list {
   padding-top: 0.5rem;
 
+  --mat-list-list-item-label-text-color: rgba(255, 255, 255, 0.9);
+  --mat-list-list-item-hover-label-text-color: #ffffff;
+  --mat-list-list-item-focus-label-text-color: #ffffff;
+  --mat-list-list-item-leading-icon-color: rgba(255, 255, 255, 0.75);
+  --mat-list-list-item-hover-leading-icon-color: #ffffff;
+  --mat-list-list-item-hover-state-layer-color: #ffffff;
+  --mat-list-list-item-focus-state-layer-color: #ffffff;
+
   a[mat-list-item] {
-    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
     margin: 0.15rem 0.75rem;
     border-radius: var(--vn-radius-sm);
+    transition: transform 0.18s ease, background 0.18s ease;
 
-    mat-icon {
-      color: rgba(255, 255, 255, 0.7);
+    &:hover:not(.is-active) {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(5px);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--vn-accent);
+      outline-offset: -2px;
     }
 
     &.is-active {
-      background: rgba(255, 255, 255, 0.14);
-      color: #ffffff;
-      font-weight: 600;
+      background: #ffffff;
+      font-weight: 700;
+      // White pill, accent text/icon — matches the tab-indicator and
+      // nav-underline "selected" language used elsewhere in the app.
+      --mat-list-list-item-label-text-color: var(--vn-accent);
+      --mat-list-list-item-hover-label-text-color: var(--vn-accent);
+      --mat-list-list-item-focus-label-text-color: var(--vn-accent);
+      --mat-list-list-item-leading-icon-color: var(--vn-accent);
+      --mat-list-list-item-hover-leading-icon-color: var(--vn-accent);
+      // White-on-white hover would otherwise be invisible — a faint navy
+      // tint gives the active item its own hover feedback instead.
+      --mat-list-list-item-hover-state-layer-color: var(--vn-primary);
+      --mat-list-list-item-focus-state-layer-color: var(--vn-primary);
 
-      mat-icon {
-        color: var(--vn-secondary);
+      &:hover {
+        transform: translateX(2px);
       }
-    }
-
-    &:hover:not(.is-active) {
-      background: rgba(255, 255, 255, 0.08);
     }
   }
 }
 
 .shell-content {
   background: var(--vn-gray-50);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  mat-nav-list a[mat-list-item] {
+    transition: none;
+
+    &:hover,
+    &.is-active:hover {
+      transform: none;
+    }
+  }
 }

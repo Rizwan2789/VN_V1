@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 
 import { environment } from '../../../../environments/environment';
 import { FeeRecordWithPayments } from '../../../core/models/fee-record.model';
@@ -8,6 +8,7 @@ import {
   Student,
   StudentCreate,
   StudentCreatedResponse,
+  StudentListItem,
   StudentListResponse,
   StudentUpdate,
 } from '../../../core/models/student.model';
@@ -34,6 +35,28 @@ export class StudentService {
     if (filters.pageSize) params = params.set('page_size', filters.pageSize);
 
     return this.http.get<StudentListResponse>(this.baseUrl, { params });
+  }
+
+  /**
+   * `list()` is server-paginated (page_size capped at 100), but neither the
+   * Students page nor a class roster needs partial pages — they need the
+   * complete matching set for on-screen display, sorting, and CSV export.
+   * Loops pages and accumulates, capped at 20 pages (2,000 students) as a
+   * safety bound against a runaway request loop, well beyond this app's
+   * realistic scale.
+   */
+  listAll(filters: Omit<StudentListFilters, 'page' | 'pageSize'>): Observable<StudentListItem[]> {
+    const pageSize = 100;
+    const maxPages = 20;
+    const fetchPage = (page: number, acc: StudentListItem[]): Observable<StudentListItem[]> =>
+      this.list({ ...filters, page, pageSize }).pipe(
+        switchMap((res) => {
+          const items = [...acc, ...res.items];
+          return items.length < res.total && page < maxPages ? fetchPage(page + 1, items) : of(items);
+        }),
+      );
+
+    return fetchPage(1, []);
   }
 
   get(id: number): Observable<Student> {

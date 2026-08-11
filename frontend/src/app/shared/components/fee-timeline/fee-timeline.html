@@ -6,12 +6,22 @@
         class="fee-timeline__segment"
         [class]="statusClass(month)"
         [class.is-selected]="selectedMonth === month"
+        [class.is-current]="isCurrentMonth(month)"
         [attr.aria-label]="monthAbbr[month - 1] + ' ' + year"
         [attr.aria-pressed]="selectedMonth === month"
+        [attr.title]="tooltipFor(month)"
         (click)="selectMonth(month)"
       >
         {{ monthAbbr[month - 1] }}
       </button>
     }
+  </div>
+
+  <div class="fee-timeline__legend">
+    <span class="legend-item"><span class="legend-dot status-paid"></span>Paid</span>
+    <span class="legend-item"><span class="legend-dot status-partial"></span>Partial</span>
+    <span class="legend-item"><span class="legend-dot status-pending"></span>Pending</span>
+    <span class="legend-item"><span class="legend-dot status-overdue"></span>Overdue</span>
+    <span class="legend-item"><span class="legend-dot status-none"></span>No record</span>
   </div>
 </div>

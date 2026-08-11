@@ -13,7 +13,7 @@ h3 {
 }
 
 h4 {
-  margin: 1rem 0 0.5rem;
+  margin: 1.25rem 0 0.5rem;
   color: var(--vn-text);
   font-size: 0.95rem;
 }
@@ -22,12 +22,36 @@ h4 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
+  padding: 0.6rem 0;
   border-bottom: 1px solid var(--vn-gray-100);
   color: var(--vn-gray-700);
 
   &:last-of-type {
     border-bottom: none;
+  }
+}
+
+.row-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--vn-gray-500);
+  font-size: 0.9rem;
+
+  .mat-icon {
+    color: var(--vn-gray-500);
+  }
+}
+
+.amount {
+  color: var(--vn-text);
+
+  &--paid {
+    color: color-mix(in srgb, var(--vn-status-paid) 70%, black);
+  }
+
+  &--overdue {
+    color: color-mix(in srgb, var(--vn-status-overdue) 70%, black);
   }
 }
 
@@ -37,24 +61,81 @@ h4 {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.25rem;
 
   li {
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    font-size: 0.85rem;
-    color: var(--vn-gray-700);
-    padding: 0.5rem 0;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.25rem;
     border-bottom: 1px solid var(--vn-gray-100);
+    border-radius: var(--vn-radius-sm);
+    transition: background 0.15s ease;
 
     &:last-child {
       border-bottom: none;
     }
+
+    &:hover {
+      background: color-mix(in srgb, var(--vn-primary) 5%, transparent);
+    }
+  }
+}
+
+.receipt-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--vn-secondary) 18%, white);
+  color: color-mix(in srgb, var(--vn-secondary) 55%, black);
+  flex-shrink: 0;
+}
+
+.receipt-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.receipt-number {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--vn-text);
+}
+
+.receipt-meta {
+  font-size: 0.78rem;
+  color: var(--vn-gray-500);
+}
+
+.no-record-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem 1rem;
+  text-align: center;
+  border: 1px dashed var(--vn-gray-200);
+  border-radius: var(--vn-radius-sm);
+  color: var(--vn-gray-500);
+
+  .mat-icon {
+    color: var(--vn-gray-300);
   }
 }
 
 .no-record-message {
-  color: var(--vn-gray-700);
+  margin: 0;
   font-size: 0.9rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .receipt-list li {
+    transition: none;
+  }
 }

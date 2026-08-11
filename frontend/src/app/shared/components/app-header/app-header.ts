@@ -7,10 +7,11 @@ import { MatMenuModule } from '@angular/material/menu';
 
 import { AuthService } from '../../../core/services/auth.service';
 import { SidenavService } from '../../services/sidenav.service';
+import { Logo } from '../logo/logo';
 
 @Component({
   selector: 'app-app-header',
-  imports: [MatButtonModule, MatIconModule, MatMenuModule],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, Logo],
   templateUrl: './app-header.html',
   styleUrl: './app-header.scss',
 })
@@ -33,5 +34,12 @@ export class AppHeader {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  get userInitials(): string {
+    const name = this.authService.currentUser()?.fullName ?? '';
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return '?';
+    return (parts[0][0] + (parts[1]?.[0] ?? '')).toUpperCase();
   }
 }

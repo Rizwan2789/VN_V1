@@ -52,12 +52,11 @@
                   </mat-form-field>
                   <mat-form-field appearance="outline">
                     <mat-label>Payment Method</mat-label>
-                    <input
-                      matInput
-                      formControlName="payment_method"
-                      placeholder="Cash, bank transfer…"
-                      aria-label="Payment Method"
-                    />
+                    <mat-select formControlName="payment_method" aria-label="Payment Method">
+                      @for (opt of paymentMethodOptions; track opt.value) {
+                        <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                      }
+                    </mat-select>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Notes</mat-label>

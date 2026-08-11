@@ -11,6 +11,7 @@ import { Batch } from '../../../../core/models/batch.model';
 import { ClassBreakdown } from '../../../../core/models/dashboard.model';
 import { StudentListItem } from '../../../../core/models/student.model';
 import { AppHeader } from '../../../../shared/components/app-header/app-header';
+import { downloadCsv } from '../../../../shared/utils/csv';
 import { BatchService } from '../../services/batch.service';
 import { DashboardService } from '../../services/dashboard.service';
 import { FeeService } from '../../services/fee.service';
@@ -77,10 +78,10 @@ export class ClassDetail {
   private loadStudents(): void {
     this.studentsLoading.set(true);
     this.studentService
-      .list({ batchId: this.id, status: this.statusFilter ?? undefined, search: this.searchTerm || undefined })
+      .listAll({ batchId: this.id, status: this.statusFilter ?? undefined, search: this.searchTerm || undefined })
       .subscribe({
-        next: (response) => {
-          this.students.set(response.items);
+        next: (items) => {
+          this.students.set(items);
           this.studentsLoading.set(false);
         },
         error: () => this.studentsLoading.set(false),
@@ -185,5 +186,26 @@ export class ClassDetail {
   deactivateStudent(item: StudentListItem): void {
     if (!confirm(`Deactivate ${item.full_name}? They will no longer be able to log in.`)) return;
     this.studentService.deactivate(item.id).subscribe(() => this.refreshAfterMutation());
+  }
+
+  exportRosterCsv(): void {
+    this.studentService
+      .listAll({ batchId: this.id, status: this.statusFilter ?? undefined, search: this.searchTerm || undefined })
+      .subscribe((items) => {
+        downloadCsv(
+          `${this.breakdown()?.batch_name ?? 'class'}-roster.csv`,
+          ['Roll No.', 'Name', 'Class', 'Monthly Fee', 'This Month Status'],
+          items.map((s) => [s.roll_no, s.full_name, s.batch.name, s.monthly_fee_amount, s.current_status ?? 'No Record']),
+        );
+      });
+  }
+
+  exportDefaultersCsv(): void {
+    const defaulters = this.breakdown()?.defaulters ?? [];
+    downloadCsv(
+      `${this.breakdown()?.batch_name ?? 'class'}-defaulters.csv`,
+      ['Student', 'Phone', 'Pending Amount'],
+      defaulters.map((d) => [d.full_name, d.phone ?? '', d.pending_amount]),
+    );
   }
 }

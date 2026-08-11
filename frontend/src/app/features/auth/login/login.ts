@@ -10,6 +10,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserRole } from '../../../core/models/user.model';
 import { HoverLiftDirective } from '../../../shared/directives/hover-lift.directive';
+import { Logo } from '../../../shared/components/logo/logo';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ import { HoverLiftDirective } from '../../../shared/directives/hover-lift.direct
     MatButtonModule,
     MatIconModule,
     HoverLiftDirective,
+    Logo,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',

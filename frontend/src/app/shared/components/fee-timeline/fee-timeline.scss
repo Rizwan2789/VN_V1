@@ -1,15 +1,31 @@
 .fee-timeline {
   overflow-x: auto;
   padding-bottom: 0.25rem;
+  scroll-snap-type: x proximity;
 }
 
 .fee-timeline__track {
+  position: relative;
   display: flex;
   gap: 4px;
   min-width: 620px;
+  padding-top: 4px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--vn-gray-200);
+    z-index: 0;
+  }
 }
 
 .fee-timeline__segment {
+  position: relative;
+  z-index: 1;
   flex: 1 1 0;
   min-width: 44px;
   height: 40px;
@@ -20,10 +36,10 @@
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
+  scroll-snap-align: start;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 
-  &:hover,
-  &:focus-visible {
+  &:hover {
     transform: translateY(-2px);
     box-shadow: var(--vn-elevation-1);
   }
@@ -34,8 +50,20 @@
   }
 
   &.is-selected {
-    outline: 2px solid var(--vn-accent);
-    outline-offset: 2px;
+    box-shadow: 0 0 0 2px var(--vn-bg), 0 0 0 4px var(--vn-accent);
+    transform: translateY(-2px);
+  }
+
+  &.is-current::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--vn-primary);
   }
 
   &.status-paid {
@@ -59,13 +87,47 @@
   }
 
   &.status-none {
-    background: var(--vn-gray-100);
-    color: var(--vn-gray-500);
+    background: transparent;
+    border: 1px dashed var(--vn-gray-300);
+    color: var(--vn-gray-400);
   }
+}
+
+.fee-timeline__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 0.75rem;
+  min-width: 620px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--vn-gray-500);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+
+  &.status-paid { background: var(--vn-status-paid); }
+  &.status-pending { background: var(--vn-gray-300); }
+  &.status-partial { background: var(--vn-status-partial); }
+  &.status-overdue { background: var(--vn-status-overdue); }
+  &.status-none { background: transparent; border: 1px dashed var(--vn-gray-300); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .fee-timeline__segment {
     transition: none;
+
+    &:hover,
+    &.is-selected {
+      transform: none;
+    }
   }
 }

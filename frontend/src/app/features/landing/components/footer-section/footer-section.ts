@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 
+import { Logo } from '../../../../shared/components/logo/logo';
+
 @Component({
   selector: 'app-footer-section',
-  imports: [],
+  imports: [Logo],
   templateUrl: './footer-section.html',
   styleUrl: './footer-section.scss',
 })

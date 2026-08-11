@@ -1,13 +1,14 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { StudentListItem } from '../../../../../core/models/student.model';
 import { StatusBadge } from '../../../../../shared/components/status-badge/status-badge';
@@ -22,16 +23,17 @@ const STATUS_OPTIONS = ['PAID', 'PENDING', 'PARTIAL', 'OVERDUE'] as const;
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    MatMenuModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatSortModule,
     MatTableModule,
+    MatTooltipModule,
     StatusBadge,
   ],
   templateUrl: './student-list-table.html',
   styleUrl: './student-list-table.scss',
 })
-export class StudentListTable {
+export class StudentListTable implements OnChanges {
   @Input() students: StudentListItem[] = [];
   @Input() loading = false;
   @Input() searchTerm = '';
@@ -43,7 +45,49 @@ export class StudentListTable {
   @Output() editStudent = new EventEmitter<StudentListItem>();
   @Output() manageFees = new EventEmitter<StudentListItem>();
   @Output() deactivateStudent = new EventEmitter<StudentListItem>();
+  @Output() exportCsv = new EventEmitter<void>();
+
+  // Setter-based query, not `ngAfterViewInit`: the <table>/MatSort only
+  // exists once loading resolves and there's at least one row (it's behind
+  // an @if/@else), so the query result appears well after initial view init
+  // — a setter re-fires each time Angular re-resolves it, a plain
+  // ngAfterViewInit read would only ever see `undefined`.
+  @ViewChild(MatSort) set matSort(sort: MatSort | undefined) {
+    if (sort) this.dataSource.sort = sort;
+  }
 
   readonly statusOptions = STATUS_OPTIONS;
-  readonly displayedColumns = ['roll_no', 'full_name', 'monthly_fee_amount', 'current_status', 'actions'];
+  readonly displayedColumns = [
+    'roll_no',
+    'full_name',
+    'batch',
+    'monthly_fee_amount',
+    'current_status',
+    'actions',
+  ];
+
+  readonly currentMonthLabel = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+  readonly dataSource = new MatTableDataSource<StudentListItem>([]);
+
+  constructor() {
+    this.dataSource.sortingDataAccessor = (student, columnId) => {
+      switch (columnId) {
+        case 'batch':
+          return student.batch.name;
+        case 'current_status':
+          return student.current_status ?? '';
+        case 'monthly_fee_amount':
+          return Number(student.monthly_fee_amount);
+        default:
+          return (student as unknown as Record<string, string>)[columnId];
+      }
+    };
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['students']) {
+      this.dataSource.data = this.students;
+    }
+  }
 }

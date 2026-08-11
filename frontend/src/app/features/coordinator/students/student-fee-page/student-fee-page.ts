@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 import { FeeRecordWithPayments, MonthSelection } from '../../../../core/models/fee-record.model';
 import { Student } from '../../../../core/models/student.model';
@@ -31,6 +32,7 @@ import { StudentService } from '../../services/student.service';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatSelectModule,
     AppHeader,
     StudentHeader,
     FeeTimeline,
@@ -61,6 +63,12 @@ export class StudentFeePage {
     payment_method: [''],
     transaction_notes: [''],
   });
+
+  readonly paymentMethodOptions = [
+    { value: 'CASH', label: 'Cash' },
+    { value: 'BANK_TRANSFER', label: 'Bank Transfer' },
+    { value: 'ONLINE', label: 'Online' },
+  ];
 
   private get studentId(): number {
     return Number(this.id);
