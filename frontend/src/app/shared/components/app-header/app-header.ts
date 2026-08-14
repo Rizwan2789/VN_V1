@@ -11,7 +11,7 @@ import { Logo } from '../logo/logo';
 
 @Component({
   selector: 'app-app-header',
-  imports: [MatButtonModule, MatIconModule, MatMenuModule, Logo],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule],
   templateUrl: './app-header.html',
   styleUrl: './app-header.scss',
 })

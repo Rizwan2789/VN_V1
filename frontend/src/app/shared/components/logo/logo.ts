@@ -7,6 +7,6 @@ import { Component, Input } from '@angular/core';
   styleUrl: './logo.scss',
 })
 export class Logo {
-  @Input() size = 40;
-  @Input() ring = false;
+  @Input() size = 60;
+  @Input() ring = true;
 }

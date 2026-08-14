@@ -1,15 +1,30 @@
+// Responsive grid — auto-fit lets cards grow to fill the row when there
+// are only 1-2 classes, but collapses to a single column on narrow
+// viewports without a media query.
 .class-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.75rem;
+  align-items: stretch;
 }
 
 // Identity stripe, keyed to --class-color set inline per card. Separate
 // vocabulary from the paid/pending/overdue colors below — this says
 // "which class," not "what status."
 app-card.class-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   position: relative;
   overflow: hidden;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(16, 24, 40, 0.1), 0 2px 4px rgba(16, 24, 40, 0.08);
+  }
 
   &::before {
     content: '';
@@ -19,19 +34,23 @@ app-card.class-card {
     right: 0;
     height: 4px;
     background: var(--class-color, var(--vn-gray-300));
+    z-index: 1;
   }
 }
 
 .class-card__header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 0.5rem;
+  margin-bottom: 0.5rem;
 
   h3 {
     margin: 0;
     color: var(--vn-text);
-    font-size: 1.05rem;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
   }
 }
 
@@ -50,9 +69,15 @@ app-card.class-card {
   font-weight: 700;
   color: var(--vn-status-overdue);
   background: color-mix(in srgb, var(--vn-status-overdue) 15%, white);
-  padding: 0.15rem 0.5rem;
+  padding: 0.2rem 0.55rem;
   border-radius: 999px;
   white-space: nowrap;
+
+  .vn-icon-sm {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
 }
 
 .no-record-badge {
@@ -64,51 +89,90 @@ app-card.class-card {
   color: var(--vn-gray-700);
   background: var(--vn-gray-100);
   border: 1px dashed var(--vn-gray-300);
-  padding: 0.1rem 0.5rem;
+  padding: 0.15rem 0.55rem;
   border-radius: 999px;
   white-space: nowrap;
-}
 
-.class-card__meta {
-  margin: 0.15rem 0 1rem;
-  color: var(--vn-gray-700);
-  font-size: 0.8125rem;
-}
-
-.class-card__stats {
-  display: flex;
-  gap: 1.25rem;
-  margin-bottom: 1rem;
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.stat-value {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--vn-text);
-
-  &.paid {
-    color: var(--vn-status-paid);
+  .vn-icon-sm {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
   }
 }
 
-.stat-label {
-  font-size: 0.7rem;
+.class-card__meta {
+  margin: 0 0 1.1rem;
   color: var(--vn-gray-700);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  font-size: 0.8rem;
 }
 
+// Side-by-side comparison: what's in hand (green) vs what's still owed
+// (red), rather than raw student counts — the amounts are what a
+// coordinator scanning the dashboard actually wants to compare.
+.class-card__amounts {
+  display: flex;
+  align-items: stretch;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--vn-gray-100);
+}
+
+.amount-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  min-width: 0;
+  flex: 1 1 0;
+
+  &.due {
+    align-items: flex-end;
+    text-align: right;
+  }
+}
+
+.amount-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+
+  &.collected {
+    color: var(--vn-status-paid);
+  }
+
+  &.due {
+    color: var(--vn-status-overdue);
+  }
+}
+
+.amount-label {
+  font-size: 0.68rem;
+  color: var(--vn-gray-700);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.amount-divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--vn-gray-200);
+  flex-shrink: 0;
+}
+
+// Pinned to the bottom of the card via the flex column above, so bars
+// line up across a row even when one card's header wraps to two lines.
 .class-card__bar {
   height: 8px;
   border-radius: 999px;
   background: var(--vn-gray-200);
   overflow: hidden;
+  margin-top: auto;
 }
 
 .class-card__bar-fill {
@@ -119,7 +183,7 @@ app-card.class-card {
 }
 
 .class-card__bar-label {
-  margin: 0.4rem 0 0;
+  margin: 0.5rem 0 0;
   font-size: 0.75rem;
   color: var(--vn-gray-700);
 }
@@ -130,7 +194,8 @@ app-card.class-card {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .class-card__bar-fill {
+  .class-card__bar-fill,
+  app-card.class-card {
     transition: none;
   }
 }

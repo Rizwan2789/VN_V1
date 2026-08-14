@@ -1,9 +1,9 @@
 <div class="class-cards-grid">
-  @for (item of breakdown; track item.batch_id) {
+  @for (item of sortedBreakdown; track item.batch_id) {
     <app-card
       class="class-card"
       [clickable]="true"
-      appHoverLift
+      [padding]="'1.1rem'"
       [style.--class-color]="classColor(item)"
       (cardClick)="openClass(item.batch_id)"
     >
@@ -26,18 +26,15 @@
       </div>
       <p class="class-card__meta">{{ item.total_students }} student{{ item.total_students === 1 ? '' : 's' }}</p>
 
-      <div class="class-card__stats">
-        <div class="stat">
-          <span class="stat-value paid">{{ item.paid_count }}</span>
-          <span class="stat-label">Paid</span>
+      <div class="class-card__amounts">
+        <div class="amount-block collected">
+          <span class="amount-value collected">Rs. {{ item.collected_amount | number: '1.0-0' }}</span>
+          <span class="amount-label">Collected</span>
         </div>
-        <div class="stat">
-          <span class="stat-value">{{ item.pending_count }}</span>
-          <span class="stat-label">Pending</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value">Rs. {{ item.pending_amount }}</span>
-          <span class="stat-label">Amount Due</span>
+        <div class="amount-divider" aria-hidden="true"></div>
+        <div class="amount-block due">
+          <span class="amount-value due">Rs. {{ item.pending_amount | number: '1.0-0' }}</span>
+          <span class="amount-label">To Collect</span>
         </div>
       </div>
 

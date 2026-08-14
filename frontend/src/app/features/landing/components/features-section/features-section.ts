@@ -24,7 +24,7 @@ export class FeaturesSection implements AfterViewInit {
       icon: 'school',
       title: 'Class-by-Class Tracking',
       description:
-        'Coordinators see every batch — 9th through 12th — broken down with its own student list and collection status.',
+        'Coordinators see every batch — Pre-9th through 12th — broken down with its own student list and collection status.',
     },
     {
       icon: 'calendar_month',

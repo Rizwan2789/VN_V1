@@ -4,7 +4,7 @@
   border: 1px solid var(--vn-gray-200);
   border-radius: var(--vn-radius-card);
   box-shadow: var(--vn-elevation-1);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 :host(.is-clickable) {

@@ -40,6 +40,7 @@ export class StudentsPage {
 
   searchTerm = '';
   statusFilter: string | null = null;
+  classFilter: number | null = null;
 
   private readonly searchTermChanges = new Subject<string>();
 
@@ -57,7 +58,11 @@ export class StudentsPage {
   private loadStudents(): void {
     this.studentsLoading.set(true);
     this.studentService
-      .listAll({ status: this.statusFilter ?? undefined, search: this.searchTerm || undefined })
+      .listAll({
+        batchId: this.classFilter ?? undefined,
+        status: this.statusFilter ?? undefined,
+        search: this.searchTerm || undefined,
+      })
       .subscribe({
         next: (items) => {
           this.students.set(items);
@@ -77,6 +82,11 @@ export class StudentsPage {
 
   onStatusFilterChange(status: string | null): void {
     this.statusFilter = status;
+    this.loadStudents();
+  }
+
+  onClassFilterChange(batchId: number | null): void {
+    this.classFilter = batchId;
     this.loadStudents();
   }
 
@@ -137,7 +147,11 @@ export class StudentsPage {
 
   exportCsv(): void {
     this.studentService
-      .listAll({ status: this.statusFilter ?? undefined, search: this.searchTerm || undefined })
+      .listAll({
+        batchId: this.classFilter ?? undefined,
+        status: this.statusFilter ?? undefined,
+        search: this.searchTerm || undefined,
+      })
       .subscribe((items) => {
         downloadCsv(
           'students.csv',

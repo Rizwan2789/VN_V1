@@ -1,6 +1,7 @@
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 1fr;
   gap: 1rem;
   align-items: stretch;
 
@@ -18,65 +19,128 @@
 app-card.metric-card {
   display: flex;
   height: 100%;
+  border-radius: var(--vn-radius-card);
+  border: 1px solid var(--vn-gray-200, rgba(6, 70, 78, 0.08));
+  box-shadow: 0 1px 2px rgba(6, 70, 78, 0.04);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+  &:focus-visible {
+    outline: 2px solid var(--vn-primary);
+    outline-offset: 2px;
+  }
+}
+
+app-card.metric-card[clickable]:hover,
+app-card.metric-card[ng-reflect-clickable="true"]:hover {
+  box-shadow: 0 8px 20px rgba(6, 70, 78, 0.08);
+  border-color: var(--vn-primary);
 }
 
 .metric-card__inner {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.9rem;
   width: 100%;
+  height: 100%;
+  padding: 1.1rem 1.25rem;
   position: relative;
+  box-sizing: border-box;
+}
+
+// Thin color-coded rail, echoing the top-border convention used on the
+// "Classes Needing Attention" cards — same category language, different axis.
+.metric-rail {
+  align-self: stretch;
+  width: 3px;
+  border-radius: 3px;
+  flex-shrink: 0;
+
+  &.collected { background: var(--vn-status-paid); }
+  &.remaining { background: var(--vn-secondary); }
+  &.overdue   { background: var(--vn-status-overdue); }
+  &.active    { background: var(--vn-accent); }
 }
 
 .metric-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: var(--vn-radius-card);
+  width: 44px;
+  height: 44px;
+  border-radius: calc(var(--vn-radius-card) - 4px);
   flex-shrink: 0;
+  transition: transform 0.2s ease;
 
   mat-icon {
-    color: #ffffff;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
   }
 
+  // Soft tint instead of a solid saturated block — calmer, more "statement
+  // dashboard," less "marketing widget." color-mix falls back gracefully;
+  // if you need broader browser support, swap for a --vn-*-soft token pair
+  // defined once in the global tokens file instead.
   &.collected {
-    background: var(--vn-primary);
+    background: color-mix(in srgb, var(--vn-status-paid) 12%, white);
+    mat-icon { color: var(--vn-status-paid); }
   }
-  // Neutral, not secondary — "pending" shouldn't sit in the same color
-  // family as "paid" on a dashboard built to tell them apart at a glance.
-  &.pending {
-    background: var(--vn-gray-700);
+  &.remaining {
+    background: color-mix(in srgb, var(--vn-secondary) 14%, white);
+    mat-icon { color: color-mix(in srgb, var(--vn-secondary) 80%, black); }
   }
   &.overdue {
-    background: var(--vn-status-overdue);
+    background: color-mix(in srgb, var(--vn-status-overdue) 12%, white);
+    mat-icon { color: var(--vn-status-overdue); }
   }
   &.active {
-    background: var(--vn-accent);
+    background: color-mix(in srgb, var(--vn-accent) 12%, white);
+    mat-icon { color: var(--vn-accent); }
   }
+}
+
+app-card.metric-card:hover .metric-icon {
+  transform: scale(1.06);
 }
 
 .metric-body {
   display: flex;
   flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
 }
 
 .metric-label {
-  font-size: 0.75rem;
-  color: var(--vn-gray-700);
-  font-weight: 500;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--vn-gray-500, var(--vn-gray-700));
 }
 
 .metric-value {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--vn-text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+// The number people check first — quiet emphasis, not a loud redesign.
+.metric-card--hero {
+  .metric-icon.collected {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--vn-status-paid) 6%, transparent);
+  }
+  .metric-value {
+    font-size: 1.65rem;
+    color: var(--vn-status-paid);
+  }
 }
 
 .metric-card__chevron {
   position: absolute;
-  right: 0;
+  right: 1.1rem;
   top: 50%;
   transform: translateY(-50%);
   color: var(--vn-gray-300);
@@ -89,8 +153,14 @@ app-card.metric-card:hover .metric-card__chevron {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  app-card.metric-card,
+  .metric-icon,
   .metric-card__chevron {
     transition: none;
+  }
+
+  app-card.metric-card:hover .metric-icon {
+    transform: none;
   }
 
   app-card.metric-card:hover .metric-card__chevron {

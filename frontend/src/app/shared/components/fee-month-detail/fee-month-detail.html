@@ -15,7 +15,7 @@
   </div>
   <div class="detail-row">
     <span class="row-label"><mat-icon class="vn-icon-sm">event</mat-icon>Due Date</span>
-    <strong>{{ r.due_date }}</strong>
+    <strong>{{ r.due_date | date: 'd MMM y' : 'UTC' }}</strong>
   </div>
 
   <ng-content select="[detail-actions]"></ng-content>
@@ -28,7 +28,7 @@
           <span class="receipt-icon"><mat-icon class="vn-icon-sm">receipt_long</mat-icon></span>
           <span class="receipt-info">
             <span class="receipt-number">{{ payment.receipt_number }}</span>
-            <span class="receipt-meta">Rs. {{ payment.amount }} · {{ payment.payment_date }}</span>
+            <span class="receipt-meta">Rs. {{ payment.amount }} · {{ payment.payment_date | date: 'd MMM y' : 'UTC' }}</span>
           </span>
           <button
             mat-icon-button

@@ -1,4 +1,4 @@
-"""One-off dev seed: 4 batches (9th-12th) + one test coordinator + one test student.
+"""One-off dev seed: 5 batches (Pre-9th - 12th) + one test coordinator + one test student.
 
 Run with: python -m scripts.seed_data (from the backend/ directory, venv active)
 """
@@ -15,7 +15,7 @@ from app.models.batch import Batch
 from app.models.student import Student
 from app.models.user import User
 
-BATCHES = [("9th", 9), ("10th", 10), ("11th", 11), ("12th", 12)]
+BATCHES = [("Pre-9th", 8), ("9th", 9), ("10th", 10), ("11th", 11), ("12th", 12)]
 
 
 async def seed() -> None:
@@ -67,7 +67,7 @@ async def seed() -> None:
             )
 
         await db.commit()
-        print("Seed complete: 4 batches, 1 coordinator (admin@vistanova.edu / Coordinator123!), "
+        print("Seed complete: 5 batches, 1 coordinator (admin@vistanova.edu / Coordinator123!), "
               "1 student (VN-2026-001 / Student123!)")
 
 

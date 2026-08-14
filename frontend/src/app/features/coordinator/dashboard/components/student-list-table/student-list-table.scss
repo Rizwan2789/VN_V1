@@ -21,7 +21,8 @@
   flex: 1 1 260px;
 }
 
-.status-field {
+.status-field,
+.class-field {
   width: 180px;
 
   @media (max-width: 640px) {
@@ -54,6 +55,17 @@
 
   table {
     width: 100%;
+  }
+
+  th.mat-mdc-header-cell {
+    background: var(--vn-primary);
+    color: #ffffff;
+    font-weight: 600;
+    // MatSortHeader renders its arrow with ViewEncapsulation.None, so a
+    // scoped `.mat-sort-header-arrow { color }` rule can't reach it — but
+    // the arrow reads this custom property, which inherits across that
+    // boundary regardless of encapsulation.
+    --mat-sort-arrow-color: #ffffff;
   }
 
   tr.mat-mdc-row:nth-child(even) {

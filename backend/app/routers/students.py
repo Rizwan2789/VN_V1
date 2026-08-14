@@ -46,7 +46,7 @@ async def list_students(
     count_query = select(func.count()).select_from(query.with_only_columns(Student.id).subquery())
     total = (await db.execute(count_query)).scalar_one()
 
-    query = query.order_by(User.full_name).offset((page - 1) * page_size).limit(page_size)
+    query = query.order_by(Student.roll_no).offset((page - 1) * page_size).limit(page_size)
     students = list((await db.execute(query)).scalars().all())
 
     status_map = await get_current_status_map(db, [s.id for s in students], today.month, today.year)

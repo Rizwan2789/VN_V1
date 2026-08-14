@@ -1,4 +1,5 @@
-import { Component, Input, inject, signal } from '@angular/core';
+import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -22,11 +23,19 @@ import { DefaultersTable } from './components/defaulters-table/defaulters-table'
 
 @Component({
   selector: 'app-class-detail',
-  imports: [MatButtonModule, MatIconModule, MatProgressSpinnerModule, AppHeader, StudentListTable, DefaultersTable],
+  imports: [
+    DecimalPipe,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    AppHeader,
+    StudentListTable,
+    DefaultersTable,
+  ],
   templateUrl: './class-detail.html',
   styleUrl: './class-detail.scss',
 })
-export class ClassDetail {
+export class ClassDetail implements OnInit {
   @Input({ required: true }) batchId!: string; // route param — bound as a string
 
   private readonly dashboardService = inject(DashboardService);
@@ -54,14 +63,20 @@ export class ClassDetail {
   }
 
   constructor() {
-    this.loadBreakdown();
-    this.loadStudents();
     this.batchService.list().subscribe((batches) => this.batches.set(batches));
 
     this.searchTermChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe((term) => {
       this.searchTerm = term;
       this.loadStudents();
     });
+  }
+
+  // `batchId` binds from the route param via withComponentInputBinding, which
+  // sets @Inputs after the constructor runs but before ngOnInit — loading
+  // here (not the constructor) is what makes `this.id` valid instead of NaN.
+  ngOnInit(): void {
+    this.loadBreakdown();
+    this.loadStudents();
   }
 
   private loadBreakdown(): void {

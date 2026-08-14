@@ -6,7 +6,7 @@ export interface BatchBreakdown {
 
 export interface DashboardMetrics {
   total_collected_this_month: string;
-  pending_count: number;
+  remaining_amount_this_month: string;
   overdue_count: number;
   active_students_count: number;
   batch_breakdown: BatchBreakdown[];

@@ -23,16 +23,39 @@ async def get_dashboard_metrics(
     today = date.today()
 
     total_collected = await db.scalar(
-        select(func.coalesce(func.sum(FeeRecord.amount_paid), 0)).where(
-            FeeRecord.period_month == today.month, FeeRecord.period_year == today.year
+        select(func.coalesce(func.sum(FeeRecord.amount_paid), 0))
+        .select_from(FeeRecord)
+        .join(Student, Student.id == FeeRecord.student_id)
+        .where(
+            FeeRecord.period_month == today.month,
+            FeeRecord.period_year == today.year,
+            Student.is_active.is_(True),
         )
     )
 
-    pending_count = await db.scalar(
-        select(func.count()).select_from(FeeRecord).where(FeeRecord.status == "PENDING")
+    # Total billed this month (active students only) — remaining-to-collect
+    # is derived from this and total_collected below, rather than counting
+    # PENDING-status records, so it reflects partial payments too.
+    total_due = await db.scalar(
+        select(func.coalesce(func.sum(FeeRecord.amount_due), 0))
+        .select_from(FeeRecord)
+        .join(Student, Student.id == FeeRecord.student_id)
+        .where(
+            FeeRecord.period_month == today.month,
+            FeeRecord.period_year == today.year,
+            Student.is_active.is_(True),
+        )
     )
     overdue_count = await db.scalar(
-        select(func.count()).select_from(FeeRecord).where(FeeRecord.status == "OVERDUE")
+        select(func.count())
+        .select_from(FeeRecord)
+        .join(Student, Student.id == FeeRecord.student_id)
+        .where(
+            FeeRecord.period_month == today.month,
+            FeeRecord.period_year == today.year,
+            FeeRecord.status == "OVERDUE",
+            Student.is_active.is_(True),
+        )
     )
     active_students_count = await db.scalar(
         select(func.count()).select_from(Student).where(Student.is_active.is_(True))
@@ -45,9 +68,10 @@ async def get_dashboard_metrics(
         .order_by(Batch.grade_level)
     )
 
+    collected = Decimal(total_collected or 0)
     return DashboardMetrics(
-        total_collected_this_month=Decimal(total_collected or 0),
-        pending_count=pending_count or 0,
+        total_collected_this_month=collected,
+        remaining_amount_this_month=Decimal(total_due or 0) - collected,
         overdue_count=overdue_count or 0,
         active_students_count=active_students_count or 0,
         batch_breakdown=[

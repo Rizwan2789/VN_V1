@@ -34,7 +34,6 @@ export interface Student {
 
 export interface StudentCreate {
   full_name: string;
-  roll_no: string;
   batch_id: number;
   email?: string;
   phone?: string;

@@ -1,4 +1,30 @@
 <div class="fee-timeline">
+
+  <!-- Year-at-a-glance summary -->
+  <div class="fee-timeline__summary">
+    <div class="summary-ring" [style.--pct]="paidPercent()">
+      <span class="summary-ring__value">{{ paidCount() }}<small>/{{ recordedCount() || 12 }}</small></span>
+      <span class="summary-ring__label">paid</span>
+    </div>
+
+    <div class="summary-stats">
+      <div class="summary-stat">
+        <span class="summary-stat__value">Rs. {{ formatAmount(totalCollected()) }}</span>
+        <span class="summary-stat__label">collected this year</span>
+      </div>
+      <div class="summary-stat" [class.is-warn]="outstandingCount() > 0">
+        <span class="summary-stat__value">
+          Rs. {{ formatAmount(totalOutstanding()) }}
+          @if (outstandingCount() > 0) {
+            <span class="summary-stat__pill">{{ outstandingCount() }} due</span>
+          }
+        </span>
+        <span class="summary-stat__label">outstanding</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Month strip -->
   <div class="fee-timeline__track">
     @for (month of months; track month) {
       <button
@@ -7,12 +33,40 @@
         [class]="statusClass(month)"
         [class.is-selected]="selectedMonth === month"
         [class.is-current]="isCurrentMonth(month)"
-        [attr.aria-label]="monthAbbr[month - 1] + ' ' + year"
         [attr.aria-pressed]="selectedMonth === month"
-        [attr.title]="tooltipFor(month)"
+        [attr.aria-label]="monthAbbr[month - 1] + ' ' + year + ', ' + statusLabel(month)"
         (click)="selectMonth(month)"
+        (mouseenter)="onSegmentEnter(month, $event)"
+        (mouseleave)="onSegmentLeave()"
+        (focus)="onSegmentEnter(month, $event)"
+        (blur)="onSegmentLeave()"
       >
-        {{ monthAbbr[month - 1] }}
+        <span class="fee-timeline__icon" aria-hidden="true" [innerHTML]="statusIcon(month)"></span>
+        <span class="fee-timeline__month">{{ monthAbbr[month - 1] }}</span>
+        @if (isCurrentMonth(month)) {
+          <span class="fee-timeline__now-dot" aria-hidden="true"></span>
+        }
+
+        <span
+          class="fee-timeline__tooltip"
+          role="tooltip"
+          [class.is-visible]="tooltipMonth() === month"
+          [style.top.px]="tooltipTop()"
+          [style.left.px]="tooltipLeft()"
+        >
+          <strong>{{ monthAbbr[month - 1] }} {{ year }}</strong>
+          <span class="fee-timeline__tooltip-status" [class]="statusClass(month)">{{ statusLabel(month) }}</span>
+          @if (recordFor(month); as record) {
+            <span class="fee-timeline__tooltip-row">
+              <span>Due</span><span>Rs. {{ formatAmount(record.amount_due) }}</span>
+            </span>
+            <span class="fee-timeline__tooltip-row">
+              <span>Paid</span><span>Rs. {{ formatAmount(record.amount_paid) }}</span>
+            </span>
+          } @else {
+            <span class="fee-timeline__tooltip-empty">No fee record yet</span>
+          }
+        </span>
       </button>
     }
   </div>

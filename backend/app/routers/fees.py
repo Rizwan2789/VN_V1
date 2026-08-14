@@ -104,18 +104,32 @@ async def record_payment(
     record = await _get_fee_record_or_404(db, fee_record_id)
 
     payment_date = payload.payment_date or date.today()
-    payment = Payment(
-        fee_record_id=record.id,
-        amount=payload.amount,
-        payment_date=payment_date,
-        payment_method=payload.payment_method,
-        transaction_notes=payload.transaction_notes,
-        receipt_number="",  # filled in below once we have an id
-        recorded_by_user_id=current_user.id,
-    )
-    db.add(payment)
-    await db.flush()
-    payment.receipt_number = format_receipt_number(payment.id, payment_date)
+
+    # One receipt per month: a second payment against the same fee record
+    # tops up the existing receipt instead of minting a new one, so a
+    # student who pays in installments still sees a single receipt for
+    # that month once it's fully paid.
+    payment = await db.scalar(select(Payment).where(Payment.fee_record_id == record.id))
+    if payment is not None:
+        payment.amount = payment.amount + payload.amount
+        payment.payment_date = payment_date
+        if payload.payment_method is not None:
+            payment.payment_method = payload.payment_method
+        if payload.transaction_notes is not None:
+            payment.transaction_notes = payload.transaction_notes
+    else:
+        payment = Payment(
+            fee_record_id=record.id,
+            amount=payload.amount,
+            payment_date=payment_date,
+            payment_method=payload.payment_method,
+            transaction_notes=payload.transaction_notes,
+            receipt_number="",  # filled in below once we have an id
+            recorded_by_user_id=current_user.id,
+        )
+        db.add(payment)
+        await db.flush()
+        payment.receipt_number = format_receipt_number(payment.id, payment_date)
 
     record.amount_paid = record.amount_paid + payload.amount
     record.last_paid_date = payment_date

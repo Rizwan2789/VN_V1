@@ -3,12 +3,7 @@ import gsap from 'gsap';
 
 import { prefersReducedMotion } from '../animations/motion';
 
-/**
- * GSAP-tweens a small translateY lift on hover/focus. Deliberately only
- * touches transform — box-shadow/border stay a plain CSS transition on the
- * host (see card.scss), since GSAP's box-shadow string interpolation is
- * unreliable to tween smoothly.
- */
+
 @Directive({
   selector: '[appHoverLift]',
 })

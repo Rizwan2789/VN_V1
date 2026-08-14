@@ -66,12 +66,43 @@
   margin: 0 0 2.5rem;
 }
 
+.hero-stats {
+  display: flex;
+  gap: 2rem;
+  margin: 0 0 2.5rem;
+
+  @media (max-width: 900px) {
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.hero-stat-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--vn-primary);
+  line-height: 1.1;
+}
+
+.hero-stat-label {
+  font-size: 0.8rem;
+  color: var(--vn-gray-500);
+}
+
 .hero-actions {
   display: flex;
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
   justify-content: flex-start;
+  gap: 12px;
 
   --mat-button-filled-container-height: 48px;
   --mat-button-outlined-container-height: 48px;

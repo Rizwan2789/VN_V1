@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -24,7 +25,7 @@ export interface ReceiptDownload {
  */
 @Component({
   selector: 'app-fee-month-detail',
-  imports: [MatButtonModule, MatIconModule, StatusBadge],
+  imports: [DatePipe, MatButtonModule, MatIconModule, StatusBadge],
   templateUrl: './fee-month-detail.html',
   styleUrl: './fee-month-detail.scss',
 })

@@ -1,104 +1,290 @@
 .fee-timeline {
-  overflow-x: auto;
-  padding-bottom: 0.25rem;
-  scroll-snap-type: x proximity;
+  --status-paid: var(--vn-status-paid, #1f9d55);
+  --status-partial: var(--vn-status-partial, #d97706);
+  --status-pending: var(--vn-gray-400, #9aa0a6);
+  --status-overdue: var(--vn-status-overdue, #d92d20);
+  --status-none: var(--vn-gray-300, #d0d5dd);
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.fee-timeline__track {
-  position: relative;
+/* ---------- Summary strip ---------- */
+
+.fee-timeline__summary {
   display: flex;
-  gap: 4px;
-  min-width: 620px;
-  padding-top: 4px;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--vn-radius-md, 12px);
+  background: linear-gradient(135deg, var(--vn-primary, #16325c) 0%, var(--vn-primary-dark, #0c1f3d) 100%);
+  color: #fff;
+}
+
+.summary-ring {
+  --pct: 0;
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background:
+    conic-gradient(var(--vn-accent, #f5821f) calc(var(--pct) * 1%), rgba(255, 255, 255, 0.18) 0);
 
   &::before {
     content: '';
     position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    height: 1px;
-    background: var(--vn-gray-200);
-    z-index: 0;
+    inset: 5px;
+    border-radius: 50%;
+    background: var(--vn-primary, #16325c);
   }
+
+  &__value {
+    position: relative;
+    z-index: 1;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1;
+
+    small {
+      font-weight: 500;
+      opacity: 0.75;
+      font-size: 0.6rem;
+    }
+  }
+
+  &__label {
+    position: relative;
+    z-index: 1;
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.75;
+    margin-top: 1px;
+  }
+}
+
+.summary-stats {
+  display: flex;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.summary-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+
+  &__value {
+    font-size: 1rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  &__label {
+    font-size: 0.7rem;
+    opacity: 0.75;
+  }
+
+  &__pill {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    background: rgba(217, 45, 32, 0.25);
+    color: #ffd4cd;
+  }
+
+  &.is-warn &__value {
+    color: #ffb4a8;
+  }
+}
+
+/* ---------- Month strip ---------- */
+
+.fee-timeline__track {
+  position: relative;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px 2px 10px;
+  scroll-snap-type: x proximity;
 }
 
 .fee-timeline__segment {
   position: relative;
   z-index: 1;
   flex: 1 1 0;
-  min-width: 44px;
-  height: 40px;
-  border: none;
-  border-radius: var(--vn-radius-sm);
-  background: var(--vn-gray-200);
-  color: var(--vn-text);
-  font-size: 0.75rem;
-  font-weight: 600;
+  min-width: 52px;
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 1px solid transparent;
+  border-radius: var(--vn-radius-sm, 8px);
+  background: color-mix(in srgb, var(--status-none) 22%, transparent);
+  color: var(--vn-text, #1a2233);
   cursor: pointer;
   scroll-snap-align: start;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 
-  &:hover {
+  // Sizing lives on the <svg> markup itself (see STATUS_ICON_SVG), not a
+  // descendant rule here — the icon arrives via [innerHTML], so it never
+  // gets Angular's scope attribute and a scoped `.fee-timeline__icon svg`
+  // selector would silently never match it.
+  .fee-timeline__icon {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    opacity: 0.9;
+  }
+
+  .fee-timeline__month {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  &:hover,
+  &:focus-visible {
     transform: translateY(-2px);
-    box-shadow: var(--vn-elevation-1);
+    box-shadow: var(--vn-elevation-1, 0 4px 10px rgba(16, 24, 40, 0.12));
   }
 
   &:focus-visible {
-    outline: 2px solid var(--vn-accent);
+    outline: 2px solid var(--vn-accent, #f5821f);
     outline-offset: 2px;
   }
 
   &.is-selected {
-    box-shadow: 0 0 0 2px var(--vn-bg), 0 0 0 4px var(--vn-accent);
-    transform: translateY(-2px);
+    border-color: var(--vn-accent, #f5821f);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--vn-accent, #f5821f) 22%, transparent);
   }
 
-  &.is-current::after {
-    content: '';
+  &.is-current .fee-timeline__now-dot {
     position: absolute;
-    bottom: -6px;
+    bottom: 6px;
     left: 50%;
     transform: translateX(-50%);
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: var(--vn-primary);
+    background: var(--vn-accent, #f5821f);
   }
 
+  /* status tints — quieter than solid fills, color carried mainly by the icon */
   &.status-paid {
-    background: var(--vn-status-paid);
-    color: #ffffff;
+    background: color-mix(in srgb, var(--status-paid) 16%, #fff);
+    color: color-mix(in srgb, var(--status-paid) 70%, black);
   }
-
-  &.status-pending {
-    background: var(--vn-gray-300);
-    color: var(--vn-text);
-  }
-
   &.status-partial {
-    background: var(--vn-status-partial);
-    color: var(--vn-text);
+    background: color-mix(in srgb, var(--status-partial) 16%, #fff);
+    color: color-mix(in srgb, var(--status-partial) 70%, black);
   }
-
+  &.status-pending {
+    background: color-mix(in srgb, var(--status-pending) 20%, #fff);
+    color: var(--vn-gray-600, #4b5563);
+  }
   &.status-overdue {
-    background: var(--vn-status-overdue);
-    color: #ffffff;
+    background: color-mix(in srgb, var(--status-overdue) 14%, #fff);
+    color: var(--status-overdue);
+    border-color: color-mix(in srgb, var(--status-overdue) 35%, transparent);
   }
-
   &.status-none {
     background: transparent;
-    border: 1px dashed var(--vn-gray-300);
-    color: var(--vn-gray-400);
+    border: 1px dashed var(--status-none);
+    color: var(--vn-gray-400, #9aa0a6);
   }
 }
+
+/* ---------- Custom tooltip ---------- */
+
+.fee-timeline__tooltip {
+  // `fixed`, not `absolute`: .fee-timeline__track scrolls horizontally
+  // (overflow-x: auto forces overflow-y to auto too, per spec), which would
+  // clip an absolutely-positioned card the moment it pokes above the strip.
+  // Fixed escapes that clipping; its top/left are computed in the component
+  // from the trigger's own getBoundingClientRect() on hover/focus.
+  position: fixed;
+  transform: translate(-50%, calc(-100% - 6px));
+  min-width: 148px;
+  padding: 0.55rem 0.65rem;
+  border-radius: var(--vn-radius-sm, 8px);
+  background: var(--vn-primary-dark, #0c1f3d);
+  color: #fff;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.12s ease, transform 0.12s ease;
+  z-index: 50;
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, calc(-100% - 10px));
+  }
+
+  strong {
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--vn-primary-dark, #0c1f3d);
+  }
+
+  &-status {
+    align-self: flex-start;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  &-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    opacity: 0.9;
+  }
+
+  &-empty {
+    opacity: 0.65;
+    font-style: italic;
+  }
+}
+
+/* ---------- Legend ---------- */
 
 .fee-timeline__legend {
   display: flex;
   flex-wrap: wrap;
   gap: 0.9rem;
-  margin-top: 0.75rem;
-  min-width: 620px;
 }
 
 .legend-item {
@@ -106,7 +292,7 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.75rem;
-  color: var(--vn-gray-500);
+  color: var(--vn-gray-500, #6b7280);
 }
 
 .legend-dot {
@@ -114,20 +300,37 @@
   height: 8px;
   border-radius: 50%;
 
-  &.status-paid { background: var(--vn-status-paid); }
-  &.status-pending { background: var(--vn-gray-300); }
-  &.status-partial { background: var(--vn-status-partial); }
-  &.status-overdue { background: var(--vn-status-overdue); }
-  &.status-none { background: transparent; border: 1px dashed var(--vn-gray-300); }
+  &.status-paid { background: var(--status-paid); }
+  &.status-pending { background: var(--status-pending); }
+  &.status-partial { background: var(--status-partial); }
+  &.status-overdue { background: var(--status-overdue); }
+  &.status-none { background: transparent; border: 1px dashed var(--status-none); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .fee-timeline__segment {
     transition: none;
 
-    &:hover,
-    &.is-selected {
+    &:hover {
       transform: none;
     }
+  }
+
+  // Not `transform: none` here — the tooltip's transform is its position
+  // (translate(-50%, ...) centers and lifts it off its fixed anchor point),
+  // not just an animation flourish. Reduced motion should drop the
+  // transition, not break placement.
+  .fee-timeline__tooltip {
+    transition: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .fee-timeline__summary {
+    flex-wrap: wrap;
+  }
+
+  .summary-stats {
+    gap: 1rem;
   }
 }

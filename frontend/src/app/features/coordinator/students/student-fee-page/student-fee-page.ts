@@ -1,4 +1,4 @@
-import { Component, Input, inject, signal } from '@angular/core';
+import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -42,7 +42,7 @@ import { StudentService } from '../../services/student.service';
   templateUrl: './student-fee-page.html',
   styleUrl: './student-fee-page.scss',
 })
-export class StudentFeePage {
+export class StudentFeePage implements OnInit {
   @Input({ required: true }) id!: string; // route param — bound as a string
 
   private readonly studentService = inject(StudentService);
@@ -74,7 +74,11 @@ export class StudentFeePage {
     return Number(this.id);
   }
 
-  constructor() {
+  // `id` binds from the route param via withComponentInputBinding, which
+  // sets @Inputs after the constructor runs but before ngOnInit — loading
+  // here (not the constructor) is what makes `this.studentId` valid instead
+  // of NaN.
+  ngOnInit(): void {
     this.studentService.get(this.studentId).subscribe((student) => this.student.set(student));
     this.loadFees();
   }

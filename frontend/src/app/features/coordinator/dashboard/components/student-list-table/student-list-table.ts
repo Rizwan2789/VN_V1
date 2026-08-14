@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +11,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+import { Batch } from '../../../../../core/models/batch.model';
 import { StudentListItem } from '../../../../../core/models/student.model';
 import { StatusBadge } from '../../../../../shared/components/status-badge/status-badge';
 
@@ -18,6 +20,7 @@ const STATUS_OPTIONS = ['PAID', 'PENDING', 'PARTIAL', 'OVERDUE'] as const;
 @Component({
   selector: 'app-student-list-table',
   imports: [
+    DecimalPipe,
     FormsModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -38,9 +41,15 @@ export class StudentListTable implements OnChanges {
   @Input() loading = false;
   @Input() searchTerm = '';
   @Input() statusFilter: string | null = null;
+  // Only the Students page (which spans every class) shows this — a
+  // single-class roster like ClassDetail's has nothing to filter by.
+  @Input() showClassFilter = false;
+  @Input() batches: Batch[] = [];
+  @Input() classFilter: number | null = null;
 
   @Output() searchTermChange = new EventEmitter<string>();
   @Output() statusFilterChange = new EventEmitter<string | null>();
+  @Output() classFilterChange = new EventEmitter<number | null>();
   @Output() addStudent = new EventEmitter<void>();
   @Output() editStudent = new EventEmitter<StudentListItem>();
   @Output() manageFees = new EventEmitter<StudentListItem>();

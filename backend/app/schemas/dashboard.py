@@ -11,7 +11,7 @@ class BatchBreakdown(BaseModel):
 
 class DashboardMetrics(BaseModel):
     total_collected_this_month: Decimal
-    pending_count: int
+    remaining_amount_this_month: Decimal
     overdue_count: int
     active_students_count: int
     batch_breakdown: list[BatchBreakdown]

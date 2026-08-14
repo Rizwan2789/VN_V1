@@ -12,6 +12,15 @@
   border: none;
   border-radius: 0;
   --mat-sidenav-container-shape: 0;
+
+  // Material's own .mat-drawer-inner-container defaults to `overflow: auto`
+  // on both axes — the moment any nav content is a pixel wider than the
+  // sidenav, that shows up as a horizontal scrollbar pinned to the bottom.
+  // Rendered by MatSidenav's own template, not ours, so a scoped selector
+  // can't reach it without ::ng-deep.
+  ::ng-deep .mat-drawer-inner-container {
+    overflow-x: hidden;
+  }
 }
 
 .shell-brand {

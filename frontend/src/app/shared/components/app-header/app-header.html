@@ -16,26 +16,23 @@
           <mat-icon>menu</mat-icon>
         </button>
       }
-      <app-logo [size]="46" [ring]="true" class="brand-mark" />
     }
-    <div class="brand-text">
-      <span class="brand-name">Vista Nova</span>
-      <span class="page-title">{{ title }}</span>
-    </div>
   </div>
 
-  <button class="user-menu-trigger" mat-button [matMenuTriggerFor]="menu" type="button">
-    <span class="user-avatar">{{ userInitials }}</span>
-    <span class="user-info">
-      <span class="user-name">{{ authService.currentUser()?.fullName }}</span>
-      <span class="user-role">{{ authService.currentUser()?.role }}</span>
-    </span>
-    <mat-icon class="vn-icon-sm chevron">expand_more</mat-icon>
-  </button>
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item type="button" (click)="logout()">
-      <mat-icon>logout</mat-icon>
-      <span>Logout</span>
+  <span class="page-title">{{ title }}</span>
+
+  <div class="user-menu">
+    <button class="user-menu-trigger" mat-button [matMenuTriggerFor]="menu" type="button">
+      <span class="user-info">
+        <span class="user-name">{{ authService.currentUser()?.fullName }}</span>
+      </span>
+      <mat-icon class="vn-icon-sm chevron">expand_more</mat-icon>
     </button>
-  </mat-menu>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item type="button" class="logout-item" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </div>
 </header>

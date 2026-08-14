@@ -32,11 +32,11 @@
           <span class="stat-label">Overdue</span>
         </div>
         <div class="stat">
-          <span class="stat-value">Rs. {{ b.pending_amount }}</span>
+          <span class="stat-value">Rs. {{ b.pending_amount | number: '1.0-0' }}</span>
           <span class="stat-label">Amount Due</span>
         </div>
         <div class="stat">
-          <span class="stat-value">Rs. {{ b.collected_amount }}</span>
+          <span class="stat-value">Rs. {{ b.collected_amount | number: '1.0-0' }}</span>
           <span class="stat-label">Collected This Month</span>
         </div>
       </div>
