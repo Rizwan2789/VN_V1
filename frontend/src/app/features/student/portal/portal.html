@@ -6,6 +6,12 @@
   <section class="ledger-section">
     <div class="ledger-card">
       <h3>Fee History</h3>
+      <app-fee-timeline
+        [records]="fees()"
+        [year]="year()"
+        [selectedMonth]="selection()?.month ?? null"
+        (monthSelected)="onMonthSelected($event)"
+      />
       <app-fee-calendar-grid
         [records]="fees()"
         [year]="year()"
@@ -16,50 +22,12 @@
     </div>
 
     @if (selection(); as sel) {
-      <div class="detail-card">
-        <h3>{{ monthName(sel.month) }} {{ year() }}</h3>
-
-        @if (sel.record; as record) {
-          <div class="detail-row">
-            <span>Status</span>
-            <app-status-badge [status]="record.status" />
-          </div>
-          <div class="detail-row">
-            <span>Amount Due</span>
-            <strong>Rs. {{ record.amount_due }}</strong>
-          </div>
-          <div class="detail-row">
-            <span>Amount Paid</span>
-            <strong>Rs. {{ record.amount_paid }}</strong>
-          </div>
-          <div class="detail-row">
-            <span>Due Date</span>
-            <strong>{{ record.due_date }}</strong>
-          </div>
-
-          @if (record.payments.length > 0) {
-            <h4>Receipts</h4>
-            <ul class="receipt-list">
-              @for (payment of record.payments; track payment.id) {
-                <li>
-                  <span>{{ payment.receipt_number }} — Rs. {{ payment.amount }} ({{ payment.payment_date }})</span>
-                  <button
-                    mat-button
-                    color="primary"
-                    type="button"
-                    (click)="downloadReceipt(payment.id, payment.receipt_number)"
-                  >
-                    <mat-icon>download</mat-icon>
-                    Download
-                  </button>
-                </li>
-              }
-            </ul>
-          }
-        } @else {
-          <p class="no-record-message">No fee record has been generated for this month yet.</p>
-        }
-      </div>
+      <app-fee-month-detail
+        [month]="sel.month"
+        [year]="year()"
+        [record]="sel.record"
+        (downloadReceipt)="downloadReceipt($event)"
+      />
     }
   </section>
 </main>

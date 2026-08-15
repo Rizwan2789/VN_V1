@@ -6,34 +6,78 @@
   padding: 1rem 1rem 0;
   background: var(--vn-bg);
   border: 1px solid var(--vn-gray-200);
-  border-top: none;
+  border-bottom: none;
+  border-radius: var(--vn-radius-card) var(--vn-radius-card) 0 0;
+  box-shadow: var(--vn-elevation-1);
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: stretch;
+    padding-bottom: 1rem;
+  }
 }
 
 .search-field {
   flex: 1 1 260px;
 }
 
-.status-field {
+.status-field,
+.class-field {
   width: 180px;
+
+  @media (max-width: 640px) {
+    width: 100%;
+  }
 }
 
 .spacer {
   flex: 1 1 auto;
+
+  @media (max-width: 640px) {
+    display: none;
+  }
+}
+
+.table-toolbar > button {
+  @media (max-width: 640px) {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .table-container {
   background: var(--vn-bg);
   border: 1px solid var(--vn-gray-200);
   border-top: none;
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 var(--vn-radius-card) var(--vn-radius-card);
+  box-shadow: var(--vn-elevation-1);
   overflow-x: auto;
 
   table {
     width: 100%;
   }
 
+  th.mat-mdc-header-cell {
+    background: var(--vn-primary);
+    color: #ffffff;
+    font-weight: 600;
+    // MatSortHeader renders its arrow with ViewEncapsulation.None, so a
+    // scoped `.mat-sort-header-arrow { color }` rule can't reach it — but
+    // the arrow reads this custom property, which inherits across that
+    // boundary regardless of encapsulation.
+    --mat-sort-arrow-color: #ffffff;
+  }
+
   tr.mat-mdc-row:nth-child(even) {
     background: var(--vn-gray-50);
+  }
+
+  tr.mat-mdc-row {
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: color-mix(in srgb, var(--vn-primary) 5%, transparent);
+    }
   }
 }
 
@@ -47,4 +91,25 @@
   padding: 2rem;
   text-align: center;
   color: var(--vn-gray-700);
+}
+
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.deactivate-action {
+  --mat-icon-button-icon-color: var(--vn-gray-500);
+
+  &:hover {
+    --mat-icon-button-icon-color: var(--vn-status-overdue);
+    --mat-icon-button-state-layer-color: var(--vn-status-overdue);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .table-container tr.mat-mdc-row {
+    transition: none;
+  }
 }

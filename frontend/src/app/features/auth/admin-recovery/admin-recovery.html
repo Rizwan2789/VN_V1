@@ -1,0 +1,90 @@
+<div class="recovery-shell">
+  <div class="recovery-card">
+    <app-logo [size]="56" [ring]="true" class="brand-mark" />
+    <h1>Admin Account Recovery</h1>
+
+    @if (step() === 'login-id') {
+      <p class="subtitle">Enter your admin email to get started.</p>
+
+      <form [formGroup]="startForm" (ngSubmit)="submitStart()" class="recovery-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="loginId" autocomplete="username" aria-label="Email" />
+        </mat-form-field>
+
+        @if (errorMessage(); as error) {
+          <p class="error-message">
+            <mat-icon class="vn-icon-sm">error_outline</mat-icon>
+            <span>{{ error }}</span>
+          </p>
+        }
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="submit-button"
+          appHoverLift
+          [disabled]="isSubmitting()"
+        >
+          {{ isSubmitting() ? 'Checking…' : 'Continue' }}
+        </button>
+      </form>
+    }
+
+    @if (step() === 'answer') {
+      <p class="subtitle">Answer your security question and choose a new password.</p>
+
+      <form [formGroup]="answerForm" (ngSubmit)="submitAnswer()" class="recovery-form">
+        <p class="security-question">{{ questionText() }}</p>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Your Answer</mat-label>
+          <input matInput formControlName="answer" aria-label="Your Answer" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>New Password</mat-label>
+          <input matInput type="password" formControlName="newPassword" aria-label="New Password" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Confirm New Password</mat-label>
+          <input matInput type="password" formControlName="confirmPassword" aria-label="Confirm New Password" />
+        </mat-form-field>
+
+        @if (errorMessage(); as error) {
+          <p class="error-message">
+            <mat-icon class="vn-icon-sm">error_outline</mat-icon>
+            <span>{{ error }}</span>
+          </p>
+        }
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="submit-button"
+          appHoverLift
+          [disabled]="isSubmitting()"
+        >
+          {{ isSubmitting() ? 'Verifying…' : 'Reset Password' }}
+        </button>
+
+        <button type="button" class="restart-link" aria-label="Start over" (click)="restart()">Start over</button>
+      </form>
+    }
+
+    @if (step() === 'success') {
+      <div class="confirmation">
+        <mat-icon class="vn-icon-lg">check_circle</mat-icon>
+        <p>Password updated. You can now sign in with your new password.</p>
+        <a mat-flat-button color="primary" routerLink="/login">Back to Sign In</a>
+      </div>
+    }
+
+    @if (step() !== 'success') {
+      <a routerLink="/login" class="back-link">Back to Sign In</a>
+    }
+  </div>
+</div>

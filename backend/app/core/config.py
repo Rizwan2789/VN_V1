@@ -18,6 +18,12 @@ class Settings(BaseSettings):
 
     cors_origins: list[str] = ["http://localhost:4200"]
 
+    # "log" writes to the email_log table instead of really sending — the only
+    # backend implemented today. A future "smtp" value is the one seam where
+    # real SMTP settings would get added, without touching any call site.
+    email_backend: str = "log"
+    email_from_address: str = "no-reply@vistanova.example.com"
+
     @field_validator("database_url")
     @classmethod
     def normalize_database_url(cls, value: str) -> str:

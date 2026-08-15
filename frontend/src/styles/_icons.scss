@@ -1,0 +1,40 @@
+// Icon sizing + hover/focus treatment for mat-icon usage app-wide.
+// Angular Material ships icons at a fixed 24px with no built-in size
+// variants or interactive-state styling — this fills both gaps.
+
+.mat-icon.vn-icon-sm {
+  width: var(--vn-icon-sm);
+  height: var(--vn-icon-sm);
+  font-size: var(--vn-icon-sm);
+}
+
+.mat-icon.vn-icon-lg {
+  width: var(--vn-icon-lg);
+  height: var(--vn-icon-lg);
+  font-size: var(--vn-icon-lg);
+}
+
+// Any icon-carrying button gets a visible, smooth hover/focus response —
+// today icon-buttons rely entirely on Material's own ripple with nothing
+// layered on top.
+.mat-mdc-icon-button,
+.mat-mdc-button-base:has(.mat-icon) {
+  transition: color 0.15s ease, transform 0.15s ease;
+
+  &:hover .mat-icon,
+  &:focus-visible .mat-icon {
+    transform: scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mat-mdc-icon-button,
+  .mat-mdc-button-base:has(.mat-icon) {
+    transition: none;
+
+    &:hover .mat-icon,
+    &:focus-visible .mat-icon {
+      transform: none;
+    }
+  }
+}

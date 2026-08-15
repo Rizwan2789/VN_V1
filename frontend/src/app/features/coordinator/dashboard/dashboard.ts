@@ -1,165 +1,80 @@
-import { Component, inject, signal } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
-import { Batch } from '../../../core/models/batch.model';
-import { DashboardMetrics } from '../../../core/models/dashboard.model';
-import { StudentListItem } from '../../../core/models/student.model';
+import { ClassBreakdown, DashboardMetrics } from '../../../core/models/dashboard.model';
 import { AppHeader } from '../../../shared/components/app-header/app-header';
-import {
-  FeeCollectionDialog,
-  FeeCollectionDialogData,
-} from '../fees/fee-collection-dialog/fee-collection-dialog';
-import { BatchService } from '../services/batch.service';
+import { staggerReveal } from '../../../shared/animations/motion';
 import { DashboardService } from '../services/dashboard.service';
-import { StudentService } from '../services/student.service';
-import {
-  StudentFormDialog,
-  StudentFormDialogData,
-} from '../students/student-form-dialog/student-form-dialog';
-import { ClassTabs } from './components/class-tabs/class-tabs';
-import { MetricsHeader } from './components/metrics-header/metrics-header';
-import { StudentListTable } from './components/student-list-table/student-list-table';
+import { FeeService } from '../services/fee.service';
+import { ClassCards } from './components/class-cards/class-cards';
+import { MetricFilter, MetricsHeader } from './components/metrics-header/metrics-header';
 
+/**
+ * KPI overview plus a class-by-class attention widget — the same class-cards
+ * grid used on the Classes page, so overdue-heavy classes are visible the
+ * moment a coordinator lands here instead of requiring a second click.
+ */
 @Component({
   selector: 'app-dashboard',
-  imports: [AppHeader, MetricsHeader, ClassTabs, StudentListTable],
+  imports: [AppHeader, MatButtonModule, MatIconModule, MetricsHeader, ClassCards],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
   private readonly dashboardService = inject(DashboardService);
-  private readonly batchService = inject(BatchService);
-  private readonly studentService = inject(StudentService);
-  private readonly dialog = inject(MatDialog);
+  private readonly feeService = inject(FeeService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly router = inject(Router);
 
   readonly metrics = signal<DashboardMetrics | null>(null);
-  readonly batches = signal<Batch[]>([]);
-  readonly students = signal<StudentListItem[]>([]);
-  readonly studentsLoading = signal(true);
+  readonly classBreakdown = signal<ClassBreakdown[]>([]);
+  readonly generatingInvoices = signal(false);
 
-  selectedBatchId: number | null = null;
-  searchTerm = '';
-  statusFilter: string | null = null;
-
-  private readonly searchTermChanges = new Subject<string>();
+  readonly classesMissingInvoices = computed(() => this.classBreakdown().filter((c) => c.no_record_count > 0));
 
   constructor() {
     this.loadMetrics();
-    this.searchTermChanges.pipe(debounceTime(300), distinctUntilChanged()).subscribe((term) => {
-      this.searchTerm = term;
-      this.loadStudents();
-    });
-
-    this.batchService.list().subscribe((batches) => {
-      this.batches.set(batches);
-      if (batches.length > 0) {
-        this.selectedBatchId = batches[0].id;
-        this.loadStudents();
-      } else {
-        this.studentsLoading.set(false);
-      }
-    });
+    this.loadClassBreakdown();
   }
 
   private loadMetrics(): void {
-    this.dashboardService.getMetrics().subscribe((metrics) => this.metrics.set(metrics));
-  }
-
-  private loadStudents(): void {
-    this.studentsLoading.set(true);
-    this.studentService
-      .list({
-        batchId: this.selectedBatchId ?? undefined,
-        status: this.statusFilter ?? undefined,
-        search: this.searchTerm || undefined,
-      })
-      .subscribe({
-        next: (response) => {
-          this.students.set(response.items);
-          this.studentsLoading.set(false);
-        },
-        error: () => this.studentsLoading.set(false),
-      });
-  }
-
-  onBatchSelected(batchId: number): void {
-    this.selectedBatchId = batchId;
-    this.loadStudents();
-  }
-
-  onSearchTermChange(term: string): void {
-    this.searchTermChanges.next(term);
-  }
-
-  onStatusFilterChange(status: string | null): void {
-    this.statusFilter = status;
-    this.loadStudents();
-  }
-
-  private refreshAfterMutation(): void {
-    this.loadStudents();
-    this.loadMetrics();
-  }
-
-  openAddStudent(): void {
-    const ref = this.dialog.open<StudentFormDialog, StudentFormDialogData>(StudentFormDialog, {
-      width: '640px',
-      data: { mode: 'create', batches: this.batches() },
-    });
-
-    ref.afterClosed().subscribe((result) => {
-      if (!result) return;
-      this.studentService.create(result).subscribe({
-        next: (created) => {
-          this.snackBar.open(
-            `Student created. Login: ${created.student.roll_no} / Temp password: ${created.temporary_password}`,
-            'Dismiss',
-            { duration: 10000 },
-          );
-          this.refreshAfterMutation();
-        },
-        error: (err) => {
-          this.snackBar.open(err?.error?.detail ?? 'Could not create student.', 'Dismiss', { duration: 5000 });
-        },
-      });
+    this.dashboardService.getMetrics().subscribe((metrics) => {
+      this.metrics.set(metrics);
+      setTimeout(() => staggerReveal(document.querySelectorAll('.metric-card')), 0);
     });
   }
 
-  editStudent(item: StudentListItem): void {
-    this.studentService.get(item.id).subscribe((student) => {
-      const ref = this.dialog.open<StudentFormDialog, StudentFormDialogData>(StudentFormDialog, {
-        width: '640px',
-        data: { mode: 'edit', batches: this.batches(), student },
-      });
-
-      ref.afterClosed().subscribe((result) => {
-        if (!result) return;
-        this.studentService.update(item.id, result).subscribe({
-          next: () => {
-            this.snackBar.open('Student profile updated.', 'Dismiss', { duration: 4000 });
-            this.refreshAfterMutation();
-          },
-          error: () => {
-            this.snackBar.open('Could not update student.', 'Dismiss', { duration: 5000 });
-          },
-        });
-      });
+  private loadClassBreakdown(): void {
+    this.dashboardService.getClassBreakdown().subscribe((breakdown) => {
+      // Classes needing the most attention (overdue, then pending) surface first.
+      this.classBreakdown.set(
+        [...breakdown].sort((a, b) => b.overdue_count - a.overdue_count || b.pending_count - a.pending_count),
+      );
+      setTimeout(() => staggerReveal(document.querySelectorAll('.class-cards-grid > *')), 0);
     });
   }
 
-  manageFees(item: StudentListItem): void {
-    const ref = this.dialog.open<FeeCollectionDialog, FeeCollectionDialogData>(FeeCollectionDialog, {
-      width: '760px',
-      data: { student: item },
-    });
-    ref.afterClosed().subscribe(() => this.refreshAfterMutation());
+  onMetricClick(filter: MetricFilter): void {
+    this.router.navigate(['/coordinator/students'], { queryParams: { status: filter.toUpperCase() } });
   }
 
-  deactivateStudent(item: StudentListItem): void {
-    if (!confirm(`Deactivate ${item.full_name}? They will no longer be able to log in.`)) return;
-    this.studentService.deactivate(item.id).subscribe(() => this.refreshAfterMutation());
+  generateAllInvoices(): void {
+    const today = new Date();
+    this.generatingInvoices.set(true);
+    this.feeService.generate(today.getMonth() + 1, today.getFullYear()).subscribe({
+      next: (created) => {
+        this.generatingInvoices.set(false);
+        this.snackBar.open(`Generated ${created.length} invoice(s).`, 'Dismiss', { duration: 5000 });
+        this.loadMetrics();
+        this.loadClassBreakdown();
+      },
+      error: () => {
+        this.generatingInvoices.set(false);
+        this.snackBar.open('Could not generate invoices. Please try again.', 'Dismiss', { duration: 5000 });
+      },
+    });
   }
 }

@@ -18,56 +18,18 @@
   }
 }
 
-.ledger-card,
-.detail-card {
+.ledger-card {
   background: var(--vn-bg);
   border: 1px solid var(--vn-gray-200);
-  border-radius: 12px;
+  border-radius: var(--vn-radius-card);
+  box-shadow: var(--vn-elevation-1);
   padding: 1.5rem;
-
-  h3 {
-    margin: 0 0 1rem;
-    color: var(--vn-text);
-  }
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--vn-gray-100);
-  color: var(--vn-gray-700);
-
-  &:last-of-type {
-    border-bottom: none;
-  }
-}
-
-.receipt-list {
-  list-style: none;
-  margin: 0.5rem 0 0;
-  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1.25rem;
 
-  li {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    font-size: 0.85rem;
-    color: var(--vn-gray-700);
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--vn-gray-100);
-
-    &:last-child {
-      border-bottom: none;
-    }
+  h3 {
+    margin: 0;
+    color: var(--vn-text);
   }
-}
-
-.no-record-message {
-  color: var(--vn-gray-700);
-  font-size: 0.9rem;
 }

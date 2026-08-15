@@ -1,9 +1,13 @@
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0 1rem;
-  min-width: 480px;
-  max-width: 560px;
+  // Row gap matters here specifically: the Roll No. field's hint text can
+  // wrap to a second line, and with zero row-gap that overflow used to spill
+  // into the row below and overlap the next field's label.
+  gap: 1.25rem 1.25rem;
+  padding-top: 0.5rem;
+  min-width: 520px;
+  max-width: 600px;
 
   mat-form-field {
     width: 100%;

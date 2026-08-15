@@ -7,7 +7,7 @@ from app.db.base import Base
 
 
 class Batch(Base):
-    """A class/grade — fixed set of 4 seeded rows: 9th, 10th, 11th, 12th."""
+    """A class/grade — fixed set of 5 seeded rows: Pre-9th, 9th, 10th, 11th, 12th."""
 
     __tablename__ = "batches"
 

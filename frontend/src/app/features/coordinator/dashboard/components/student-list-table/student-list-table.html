@@ -7,7 +7,7 @@
       (ngModelChange)="searchTermChange.emit($event)"
       aria-label="Search students"
     />
-    <mat-icon matSuffix>search</mat-icon>
+    <mat-icon matSuffix class="vn-icon-sm">search</mat-icon>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="status-field">
@@ -20,7 +20,24 @@
     </mat-select>
   </mat-form-field>
 
+  @if (showClassFilter) {
+    <mat-form-field appearance="outline" class="class-field">
+      <mat-label>Class</mat-label>
+      <mat-select [ngModel]="classFilter" (ngModelChange)="classFilterChange.emit($event)">
+        <mat-option [value]="null">All classes</mat-option>
+        @for (batch of batches; track batch.id) {
+          <mat-option [value]="batch.id">{{ batch.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
+
   <span class="spacer"></span>
+
+  <button mat-stroked-button type="button" (click)="exportCsv.emit()">
+    <mat-icon>download</mat-icon>
+    Export CSV
+  </button>
 
   <button mat-flat-button color="primary" type="button" (click)="addStudent.emit()">
     <mat-icon>person_add</mat-icon>
@@ -36,24 +53,29 @@
   } @else if (students.length === 0) {
     <p class="empty-state">No students found for this class yet.</p>
   } @else {
-    <table mat-table [dataSource]="students">
+    <table mat-table [dataSource]="dataSource" matSort matSortActive="roll_no" matSortDirection="asc">
       <ng-container matColumnDef="roll_no">
-        <th mat-header-cell *matHeaderCellDef>Roll No.</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Roll No.</th>
         <td mat-cell *matCellDef="let student">{{ student.roll_no }}</td>
       </ng-container>
 
       <ng-container matColumnDef="full_name">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
         <td mat-cell *matCellDef="let student">{{ student.full_name }}</td>
       </ng-container>
 
+      <ng-container matColumnDef="batch">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Class</th>
+        <td mat-cell *matCellDef="let student">{{ student.batch.name }}</td>
+      </ng-container>
+
       <ng-container matColumnDef="monthly_fee_amount">
-        <th mat-header-cell *matHeaderCellDef>Monthly Fee</th>
-        <td mat-cell *matCellDef="let student">Rs. {{ student.monthly_fee_amount }}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Monthly Fee</th>
+        <td mat-cell *matCellDef="let student">Rs. {{ student.monthly_fee_amount | number: '1.0-0' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="current_status">
-        <th mat-header-cell *matHeaderCellDef>This Month</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ currentMonthLabel }}</th>
         <td mat-cell *matCellDef="let student">
           <app-status-badge [status]="student.current_status" />
         </td>
@@ -62,23 +84,36 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let student">
-          <button mat-icon-button type="button" [matMenuTriggerFor]="rowMenu" [attr.aria-label]="'Actions for ' + student.full_name">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #rowMenu="matMenu">
-            <button mat-menu-item type="button" (click)="editStudent.emit(student)">
-              <mat-icon>edit</mat-icon>
-              <span>Edit Profile</span>
+          <div class="row-actions">
+            <button
+              mat-icon-button
+              type="button"
+              matTooltip="View fee calendar"
+              (click)="manageFees.emit(student)"
+              [attr.aria-label]="'View fee calendar for ' + student.full_name"
+            >
+              <mat-icon class="vn-icon-sm">calendar_month</mat-icon>
             </button>
-            <button mat-menu-item type="button" (click)="manageFees.emit(student)">
-              <mat-icon>receipt_long</mat-icon>
-              <span>Manage Fees</span>
+            <button
+              mat-icon-button
+              type="button"
+              matTooltip="Edit profile"
+              (click)="editStudent.emit(student)"
+              [attr.aria-label]="'Edit profile for ' + student.full_name"
+            >
+              <mat-icon class="vn-icon-sm">edit</mat-icon>
             </button>
-            <button mat-menu-item type="button" (click)="deactivateStudent.emit(student)">
-              <mat-icon>person_off</mat-icon>
-              <span>Deactivate</span>
+            <button
+              mat-icon-button
+              type="button"
+              class="deactivate-action"
+              matTooltip="Deactivate student"
+              (click)="deactivateStudent.emit(student)"
+              [attr.aria-label]="'Deactivate ' + student.full_name"
+            >
+              <mat-icon class="vn-icon-sm">person_off</mat-icon>
             </button>
-          </mat-menu>
+          </div>
         </td>
       </ng-container>
 

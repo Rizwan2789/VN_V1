@@ -1,0 +1,80 @@
+.fee-page-content {
+  padding: 1.5rem;
+  background: var(--vn-gray-50);
+  min-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.generate-btn {
+  align-self: flex-start;
+}
+
+.ledger-section {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.5rem;
+  align-items: start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ledger-card {
+  background: var(--vn-bg);
+  border: 1px solid var(--vn-gray-200);
+  border-radius: var(--vn-radius-card);
+  box-shadow: var(--vn-elevation-1);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  h3 {
+    margin: 0;
+    color: var(--vn-text);
+  }
+}
+
+.payment-form {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--vn-gray-200);
+  border-radius: var(--vn-radius-sm);
+  background: var(--vn-gray-50);
+
+  h4 {
+    margin: 0 0 0.75rem;
+    color: var(--vn-text);
+  }
+}
+
+.payment-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1rem;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+.payment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.error-message {
+  color: var(--vn-status-overdue);
+  font-size: 0.875rem;
+}

@@ -19,3 +19,8 @@ export interface FeeRecord {
 export interface FeeRecordWithPayments extends FeeRecord {
   payments: Payment[];
 }
+
+export interface MonthSelection {
+  month: number;
+  record: FeeRecordWithPayments | null;
+}

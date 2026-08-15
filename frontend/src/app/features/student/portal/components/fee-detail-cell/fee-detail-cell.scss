@@ -24,12 +24,6 @@
     box-shadow: 0 0 0 2px var(--vn-accent);
   }
 
-  &.is-current .month-label::after {
-    content: '•';
-    color: var(--vn-accent);
-    margin-left: 0.35rem;
-  }
-
   &:not(.has-record) {
     opacity: 0.6;
   }

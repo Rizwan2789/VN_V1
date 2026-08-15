@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 import { revealOnScroll } from '../../animations/hero.animations';
+import { HoverLiftDirective } from '../../../../shared/directives/hover-lift.directive';
 
 interface Feature {
   icon: string;
@@ -11,7 +12,7 @@ interface Feature {
 
 @Component({
   selector: 'app-features-section',
-  imports: [MatIconModule],
+  imports: [MatIconModule, HoverLiftDirective],
   templateUrl: './features-section.html',
   styleUrl: './features-section.scss',
 })
@@ -23,7 +24,7 @@ export class FeaturesSection implements AfterViewInit {
       icon: 'school',
       title: 'Class-by-Class Tracking',
       description:
-        'Coordinators see every batch — 9th through 12th — broken down with its own student list and collection status.',
+        'Coordinators see every batch — Pre-9th through 12th — broken down with its own student list and collection status.',
     },
     {
       icon: 'calendar_month',

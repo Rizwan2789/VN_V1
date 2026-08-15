@@ -1,0 +1,106 @@
+.shell-container {
+  height: 100vh;
+  height: 100dvh; // avoids the mobile address-bar resize jump; ignored by browsers that don't support dvh
+}
+
+.shell-sidenav {
+  width: 260px;
+  background: var(--vn-primary);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  border: none;
+  border-radius: 0;
+  --mat-sidenav-container-shape: 0;
+
+  // Material's own .mat-drawer-inner-container defaults to `overflow: auto`
+  // on both axes — the moment any nav content is a pixel wider than the
+  // sidenav, that shows up as a horizontal scrollbar pinned to the bottom.
+  // Rendered by MatSidenav's own template, not ours, so a scoped selector
+  // can't reach it without ::ng-deep.
+  ::ng-deep .mat-drawer-inner-container {
+    overflow-x: hidden;
+  }
+}
+
+.shell-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1.25rem;
+  flex-shrink: 0;
+}
+
+.brand-mark {
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+mat-nav-list {
+  padding-top: 0.5rem;
+
+  --mat-list-list-item-label-text-color: rgba(255, 255, 255, 0.9);
+  --mat-list-list-item-hover-label-text-color: #ffffff;
+  --mat-list-list-item-focus-label-text-color: #ffffff;
+  --mat-list-list-item-leading-icon-color: rgba(255, 255, 255, 0.75);
+  --mat-list-list-item-hover-leading-icon-color: #ffffff;
+  --mat-list-list-item-hover-state-layer-color: #ffffff;
+  --mat-list-list-item-focus-state-layer-color: #ffffff;
+
+  a[mat-list-item] {
+    font-weight: 500;
+    margin: 0.15rem 0.75rem;
+    border-radius: var(--vn-radius-sm);
+    transition: transform 0.18s ease, background 0.18s ease;
+
+    &:hover:not(.is-active) {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(5px);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--vn-accent);
+      outline-offset: -2px;
+    }
+
+    &.is-active {
+      background: #ffffff;
+      font-weight: 700;
+      // White pill, accent text/icon — matches the tab-indicator and
+      // nav-underline "selected" language used elsewhere in the app.
+      --mat-list-list-item-label-text-color: var(--vn-accent);
+      --mat-list-list-item-hover-label-text-color: var(--vn-accent);
+      --mat-list-list-item-focus-label-text-color: var(--vn-accent);
+      --mat-list-list-item-leading-icon-color: var(--vn-accent);
+      --mat-list-list-item-hover-leading-icon-color: var(--vn-accent);
+      // White-on-white hover would otherwise be invisible — a faint navy
+      // tint gives the active item its own hover feedback instead.
+      --mat-list-list-item-hover-state-layer-color: var(--vn-primary);
+      --mat-list-list-item-focus-state-layer-color: var(--vn-primary);
+
+      &:hover {
+        transform: translateX(2px);
+      }
+    }
+  }
+}
+
+.shell-content {
+  background: var(--vn-gray-50);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  mat-nav-list a[mat-list-item] {
+    transition: none;
+
+    &:hover,
+    &.is-active:hover {
+      transform: none;
+    }
+  }
+}

@@ -8,6 +8,7 @@
 }
 
 .branding-panel {
+  position: relative;
   flex: 1 1 45%;
   display: flex;
   align-items: center;
@@ -15,35 +16,55 @@
   padding: 3rem;
   background: linear-gradient(160deg, var(--vn-primary) 0%, #0a2559 100%);
   color: #ffffff;
+  overflow: hidden;
+
+  // Quiet dot-grid texture so the panel isn't a flat gradient slab.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px);
+    background-size: 22px 22px;
+    mask-image: radial-gradient(circle at 30% 30%, black, transparent 75%);
+    pointer-events: none;
+  }
+
+  // Soft glow anchoring the logo.
+  &::after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 55%;
+    height: 55%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--vn-secondary) 35%, transparent) 0%, transparent 70%);
+    filter: blur(20px);
+    pointer-events: none;
+  }
 
   .brand-mark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
-    background: var(--vn-accent);
-    font-weight: 700;
-    font-size: 1.25rem;
     margin-bottom: 1.5rem;
+    position: relative;
   }
 
   h1 {
     font-size: 2.25rem;
     margin: 0 0 0.5rem;
+    position: relative;
   }
 
   .tagline {
     color: var(--vn-secondary);
     font-weight: 600;
     margin: 0 0 1.5rem;
+    position: relative;
   }
 
   .description {
     color: rgba(255, 255, 255, 0.85);
     line-height: 1.6;
     margin-bottom: 2rem;
+    position: relative;
   }
 
   .highlights {
@@ -52,25 +73,34 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
+    position: relative;
 
     li {
-      padding-left: 1.5rem;
-      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
       color: rgba(255, 255, 255, 0.9);
-
-      &::before {
-        content: '✓';
-        position: absolute;
-        left: 0;
-        color: var(--vn-secondary);
-        font-weight: 700;
-      }
+      line-height: 1.5;
     }
+  }
+
+  .highlight-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--vn-secondary) 25%, transparent);
+    color: var(--vn-secondary);
+    margin-top: 0.1rem;
   }
 
   .branding-content {
     max-width: 440px;
+    position: relative;
   }
 }
 
@@ -86,42 +116,182 @@
 .form-card {
   width: 100%;
   max-width: 400px;
+  padding: 2.5rem;
+  border-radius: calc(var(--vn-radius-sm) * 2);
+  background: color-mix(in srgb, var(--vn-bg) 60%, white);
+  border: 1px solid var(--vn-gray-200);
+  box-shadow: var(--vn-elevation-2);
+  animation: vn-fade-up 0.45s ease both;
 
   h2 {
-    margin: 0 0 0.25rem;
-    color: var(--vn-text);
+    margin: 0 0 0.4rem;
+    color: var(--vn-primary);
+    font-size: 1.75rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 0.75rem;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 42px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--vn-accent);
+    }
   }
 
   .form-subtitle {
     color: var(--vn-gray-700);
-    margin: 0 0 1.5rem;
+    margin: 0 0 1.75rem;
+    font-size: 0.95rem;
   }
 }
 
 .role-tabs {
   margin-bottom: 1.5rem;
-  border-radius: 8px;
+  border-radius: var(--vn-radius-sm);
   overflow: hidden;
   border: 1px solid var(--vn-gray-200);
+  box-shadow: var(--vn-elevation-1);
+  transition: box-shadow 0.2s ease;
+
+  --mat-tab-active-indicator-color: var(--vn-accent);
+  --mat-tab-active-label-text-color: var(--vn-accent);
+  --mat-tab-active-hover-indicator-color: var(--vn-accent);
+  --mat-tab-active-focus-indicator-color: var(--vn-accent);
+  --mat-tab-active-hover-label-text-color: var(--vn-accent);
+  --mat-tab-active-focus-label-text-color: var(--vn-accent);
+  --mat-tab-active-ripple-color: var(--vn-accent);
+  --mat-tab-active-indicator-height: 3px;
+  --mat-tab-label-text-weight: 600;
+
+  &:hover {
+    box-shadow: var(--vn-elevation-2);
+  }
+}
+
+.tab-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
 
+  --mat-form-field-outlined-outline-color: var(--vn-gray-300);
+  --mat-form-field-outlined-hover-outline-color: var(--vn-primary);
+  --mat-form-field-outlined-focus-outline-color: var(--vn-primary);
+  --mat-form-field-outlined-focus-outline-width: 2px;
+  --mat-form-field-outlined-focus-label-text-color: var(--vn-primary);
+  --mat-form-field-outlined-caret-color: var(--vn-accent);
+
   mat-form-field {
     width: 100%;
   }
 }
 
+.field-icon {
+  color: var(--vn-gray-500);
+  margin-right: 0.5rem;
+  transition: color 0.15s ease;
+}
+
+mat-form-field.mat-focused .field-icon {
+  color: var(--vn-primary);
+}
+
+.secondary-links {
+  // Positive margin, not negative: mat-form-field always reserves space
+  // below the input for its hint/error subscript, even when empty. A
+  // negative margin here pulled this row up underneath that reserved
+  // (invisible but still hit-testable) area, silently swallowing clicks.
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.25rem 0 1rem;
+}
+
+.forgot-password-link,
+.signup-link {
+  // Pinned right via margin-left: auto (not justify-content: space-between
+  // on the parent) so it stays right-aligned even when signup-link isn't
+  // rendered at all (coordinator/admin tabs) — space-between would instead
+  // collapse a lone child to the start edge.
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--vn-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--vn-accent);
+    outline-offset: 2px;
+  }
+}
+
+.forgot-password-link {
+  margin-left: auto;
+}
+
 .error-message {
-  color: var(--vn-status-overdue);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: color-mix(in srgb, var(--vn-status-overdue) 75%, black);
+  background: color-mix(in srgb, var(--vn-status-overdue) 10%, white);
+  border: 1px solid color-mix(in srgb, var(--vn-status-overdue) 30%, white);
+  border-radius: var(--vn-radius-sm);
+  padding: 0.65rem 0.85rem;
   margin: -0.5rem 0 1rem;
   font-size: 0.875rem;
+  font-weight: 500;
+
+  .mat-icon {
+    flex-shrink: 0;
+  }
 }
 
 .submit-button {
   width: 100%;
   height: 44px;
   margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+@keyframes vn-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .role-tabs,
+  .nav-brand,
+  .form-card {
+    transition: none;
+    animation: none;
+  }
 }

@@ -16,3 +16,12 @@ async def list_batches(
 ) -> list[Batch]:
     result = await db.execute(select(Batch).order_by(Batch.grade_level))
     return list(result.scalars().all())
+
+
+@router.get("/public", response_model=list[BatchResponse])
+async def list_batches_public(db: AsyncSession = Depends(get_db)) -> list[Batch]:
+    """Unauthenticated — the self-signup form needs a class picker before
+    there's any session to authenticate. Same minimal fields as the
+    authenticated list; nothing sensitive lives on Batch."""
+    result = await db.execute(select(Batch).order_by(Batch.grade_level))
+    return list(result.scalars().all())

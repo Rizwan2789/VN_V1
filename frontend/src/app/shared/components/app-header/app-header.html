@@ -1,20 +1,38 @@
 <header class="app-header">
   <div class="brand">
-    <span class="brand-mark">VN</span>
-    <div class="brand-text">
-      <span class="brand-name">Vista Nova</span>
-      <span class="page-title">{{ title }}</span>
-    </div>
+    @if (showBack) {
+      <button mat-icon-button class="back-button" type="button" (click)="goBack()" aria-label="Go back">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    } @else {
+      @if (showMenuToggle) {
+        <button
+          mat-icon-button
+          class="menu-toggle"
+          type="button"
+          (click)="sidenavService.toggle()"
+          aria-label="Toggle navigation menu"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+    }
   </div>
 
-  <button class="user-menu-trigger" mat-button [matMenuTriggerFor]="menu" type="button">
-    <span class="user-name">{{ authService.currentUser()?.fullName }}</span>
-    <mat-icon>account_circle</mat-icon>
-  </button>
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item type="button" (click)="logout()">
-      <mat-icon>logout</mat-icon>
-      <span>Logout</span>
+  <span class="page-title">{{ title }}</span>
+
+  <div class="user-menu">
+    <button class="user-menu-trigger" mat-button [matMenuTriggerFor]="menu" type="button">
+      <span class="user-info">
+        <span class="user-name">{{ authService.currentUser()?.fullName }}</span>
+      </span>
+      <mat-icon class="vn-icon-sm chevron">expand_more</mat-icon>
     </button>
-  </mat-menu>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item type="button" class="logout-item" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </div>
 </header>

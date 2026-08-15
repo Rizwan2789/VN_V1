@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 3rem 2rem 5rem;
   text-align: center;
+  scroll-margin-top: 88px;
 
   @media (max-width: 900px) {
     padding: 2rem 1.25rem 3rem;
@@ -15,6 +16,19 @@
   }
 }
 
+.features-eyebrow {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--vn-accent) 15%, white);
+  color: color-mix(in srgb, var(--vn-accent) 65%, black);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
 .features-subtitle {
   color: var(--vn-gray-700);
   margin: 0 0 2.5rem;
@@ -22,20 +36,49 @@
 
 .feature-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.5rem;
-
-  @media (max-width: 800px) {
-    grid-template-columns: 1fr;
-  }
 }
 
 .feature-card {
+  position: relative;
   background: var(--vn-bg);
   border: 1px solid var(--vn-gray-200);
-  border-radius: 14px;
+  border-radius: var(--vn-radius-card);
   padding: 2rem 1.5rem;
   text-align: left;
+  box-shadow: var(--vn-elevation-1);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+  // Same accent rule that appears on the nav underline and footer top border.
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--vn-accent), var(--vn-secondary));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+
+  &:hover {
+    box-shadow: var(--vn-elevation-hover);
+    border-color: transparent;
+    transform: translateY(-3px);
+
+    &::before {
+      transform: scaleX(1);
+    }
+
+    .feature-icon {
+      background: color-mix(in srgb, var(--vn-primary) 16%, white);
+      transform: translateY(-2px);
+    }
+  }
 
   h3 {
     margin: 0 0 0.5rem;
@@ -53,13 +96,25 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--vn-radius-card);
   background: color-mix(in srgb, var(--vn-primary) 10%, white);
   margin-bottom: 1.25rem;
+  transition: background 0.2s ease, transform 0.2s ease;
 
   mat-icon {
     color: var(--vn-primary);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-card,
+  .feature-icon {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
   }
 }

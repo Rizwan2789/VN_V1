@@ -1,0 +1,51 @@
+<h3>{{ monthName }} {{ year }}</h3>
+
+@if (record; as r) {
+  <div class="detail-row">
+    <span class="row-label"><mat-icon class="vn-icon-sm">flag</mat-icon>Status</span>
+    <app-status-badge [status]="r.status" />
+  </div>
+  <div class="detail-row">
+    <span class="row-label"><mat-icon class="vn-icon-sm">request_quote</mat-icon>Amount Due</span>
+    <strong class="amount" [class.amount--overdue]="r.status === 'OVERDUE'">Rs. {{ r.amount_due }}</strong>
+  </div>
+  <div class="detail-row">
+    <span class="row-label"><mat-icon class="vn-icon-sm">payments</mat-icon>Amount Paid</span>
+    <strong class="amount amount--paid">Rs. {{ r.amount_paid }}</strong>
+  </div>
+  <div class="detail-row">
+    <span class="row-label"><mat-icon class="vn-icon-sm">event</mat-icon>Due Date</span>
+    <strong>{{ r.due_date | date: 'd MMM y' : 'UTC' }}</strong>
+  </div>
+
+  <ng-content select="[detail-actions]"></ng-content>
+
+  @if (r.payments.length > 0) {
+    <h4>Receipts</h4>
+    <ul class="receipt-list">
+      @for (payment of r.payments; track payment.id) {
+        <li>
+          <span class="receipt-icon"><mat-icon class="vn-icon-sm">receipt_long</mat-icon></span>
+          <span class="receipt-info">
+            <span class="receipt-number">{{ payment.receipt_number }}</span>
+            <span class="receipt-meta">Rs. {{ payment.amount }} · {{ payment.payment_date | date: 'd MMM y' : 'UTC' }}</span>
+          </span>
+          <button
+            mat-icon-button
+            color="primary"
+            type="button"
+            [attr.aria-label]="'Download receipt ' + payment.receipt_number"
+            (click)="downloadReceipt.emit({ paymentId: payment.id, receiptNumber: payment.receipt_number })"
+          >
+            <mat-icon class="vn-icon-sm">download</mat-icon>
+          </button>
+        </li>
+      }
+    </ul>
+  }
+} @else {
+  <div class="no-record-state">
+    <mat-icon class="vn-icon-lg">event_busy</mat-icon>
+    <p class="no-record-message">No fee record has been generated for this month yet.</p>
+  </div>
+}

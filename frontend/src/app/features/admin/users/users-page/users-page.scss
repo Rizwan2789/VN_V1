@@ -1,0 +1,118 @@
+.users-page-content {
+  padding: 1.5rem;
+  min-height: calc(100vh - 64px);
+}
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem 1rem 0;
+  background: var(--vn-bg);
+  border: 1px solid var(--vn-gray-200);
+  border-bottom: none;
+  border-radius: var(--vn-radius-card) var(--vn-radius-card) 0 0;
+  box-shadow: var(--vn-elevation-1);
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: stretch;
+    padding-bottom: 1rem;
+  }
+}
+
+.search-field {
+  flex: 1 1 260px;
+}
+
+.role-field {
+  width: 180px;
+
+  @media (max-width: 640px) {
+    width: 100%;
+  }
+}
+
+.table-container {
+  background: var(--vn-bg);
+  border: 1px solid var(--vn-gray-200);
+  border-top: none;
+  border-radius: 0 0 var(--vn-radius-card) var(--vn-radius-card);
+  box-shadow: var(--vn-elevation-1);
+  overflow-x: auto;
+
+  table {
+    width: 100%;
+  }
+
+  th.mat-mdc-header-cell {
+    background: var(--vn-primary);
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  tr.mat-mdc-row:nth-child(even) {
+    background: var(--vn-gray-50);
+  }
+}
+
+.loading-row {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.empty-state {
+  padding: 2rem;
+  text-align: center;
+  color: var(--vn-gray-700);
+}
+
+.role-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  &.role-coordinator {
+    background: color-mix(in srgb, var(--vn-primary) 12%, white);
+    color: var(--vn-primary);
+  }
+
+  &.role-student {
+    background: color-mix(in srgb, var(--vn-status-paid) 15%, white);
+    color: var(--vn-status-paid);
+  }
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: color-mix(in srgb, var(--vn-status-paid) 15%, white);
+  color: var(--vn-status-paid);
+
+  &.status-inactive {
+    background: var(--vn-gray-100);
+    color: var(--vn-gray-500);
+  }
+}
+
+.deactivate-action {
+  --mat-icon-button-icon-color: var(--vn-gray-500);
+
+  &:hover {
+    --mat-icon-button-icon-color: var(--vn-status-overdue);
+    --mat-icon-button-state-layer-color: var(--vn-status-overdue);
+  }
+}

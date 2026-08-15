@@ -1,0 +1,80 @@
+<app-app-header [title]="breakdown()?.batch_name ?? 'Class'" [showBack]="true" />
+
+<main class="class-detail-content">
+  @if (breakdownLoading()) {
+    <div class="loading-row">
+      <mat-spinner diameter="32" />
+    </div>
+  } @else if (breakdown(); as b) {
+    <section class="stats-card">
+      <div class="stats-card__header">
+        <div>
+          <h2>{{ b.batch_name }}</h2>
+          <p class="meta">{{ b.total_students }} student{{ b.total_students === 1 ? '' : 's' }}</p>
+        </div>
+        <button mat-flat-button color="primary" type="button" [disabled]="generating()" (click)="generateInvoices()">
+          <mat-icon>receipt_long</mat-icon>
+          {{ generating() ? 'Generating…' : "Generate Invoices for this Class" }}
+        </button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat">
+          <span class="stat-value paid">{{ b.paid_count }}</span>
+          <span class="stat-label">Paid</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value pending">{{ b.pending_count }}</span>
+          <span class="stat-label">Pending</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value overdue">{{ b.overdue_count }}</span>
+          <span class="stat-label">Overdue</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">Rs. {{ b.pending_amount | number: '1.0-0' }}</span>
+          <span class="stat-label">Amount Due</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">Rs. {{ b.collected_amount | number: '1.0-0' }}</span>
+          <span class="stat-label">Collected This Month</span>
+        </div>
+      </div>
+
+      <div class="stats-card__bar">
+        <div class="stats-card__bar-fill" [style.width.%]="collectedPercent()"></div>
+      </div>
+      <p class="stats-card__bar-label">{{ collectedPercent() }}% collected this month</p>
+    </section>
+
+    <section class="defaulters-card">
+      <div class="defaulters-card__header">
+        <h3>Defaulters ({{ b.defaulters.length }})</h3>
+        @if (b.defaulters.length > 0) {
+          <button mat-stroked-button type="button" (click)="exportDefaultersCsv()">
+            <mat-icon>download</mat-icon>
+            Export Defaulters
+          </button>
+        }
+      </div>
+      <app-defaulters-table [defaulters]="b.defaulters" />
+    </section>
+  }
+
+  <section class="roster-card">
+    <h3>Class Roster</h3>
+    <app-student-list-table
+      [students]="students()"
+      [loading]="studentsLoading()"
+      [searchTerm]="searchTerm"
+      [statusFilter]="statusFilter"
+      (searchTermChange)="onSearchTermChange($event)"
+      (statusFilterChange)="onStatusFilterChange($event)"
+      (addStudent)="openAddStudent()"
+      (editStudent)="editStudent($event)"
+      (manageFees)="manageFees($event)"
+      (deactivateStudent)="deactivateStudent($event)"
+      (exportCsv)="exportRosterCsv()"
+    />
+  </section>
+</main>

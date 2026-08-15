@@ -1,33 +1,46 @@
 <div class="metrics-grid">
-  <div class="metric-card">
-    <div class="metric-icon collected"><mat-icon>payments</mat-icon></div>
-    <div class="metric-body">
-      <span class="metric-label">Total Collected (This Month)</span>
-      <span class="metric-value">Rs. {{ metrics?.total_collected_this_month ?? '0' }}</span>
+  <app-card class="metric-card metric-card--hero">
+    <div class="metric-card__inner">
+      <span class="metric-rail collected"></span>
+      <div class="metric-icon collected"><mat-icon>payments</mat-icon></div>
+      <div class="metric-body">
+        <span class="metric-label">Total Collected (This Month)</span>
+        <span class="metric-value">Rs. {{ (metrics?.total_collected_this_month ?? 0) | number: '1.0-0' }}</span>
+      </div>
     </div>
-  </div>
+  </app-card>
 
-  <div class="metric-card">
-    <div class="metric-icon pending"><mat-icon>schedule</mat-icon></div>
-    <div class="metric-body">
-      <span class="metric-label">Pending Payments</span>
-      <span class="metric-value">{{ metrics?.pending_count ?? 0 }}</span>
+  <app-card class="metric-card">
+    <div class="metric-card__inner">
+      <span class="metric-rail remaining"></span>
+      <div class="metric-icon remaining"><mat-icon>schedule</mat-icon></div>
+      <div class="metric-body">
+        <span class="metric-label">Remaining to Collect</span>
+        <span class="metric-value">Rs. {{ (metrics?.remaining_amount_this_month ?? 0) | number: '1.0-0' }}</span>
+      </div>
     </div>
-  </div>
+  </app-card>
 
-  <div class="metric-card">
-    <div class="metric-icon overdue"><mat-icon>warning</mat-icon></div>
-    <div class="metric-body">
-      <span class="metric-label">Overdue Count</span>
-      <span class="metric-value">{{ metrics?.overdue_count ?? 0 }}</span>
+  <app-card class="metric-card" [clickable]="true" appHoverLift (cardClick)="metricClick.emit('overdue')">
+    <div class="metric-card__inner">
+      <span class="metric-rail overdue"></span>
+      <div class="metric-icon overdue"><mat-icon>warning</mat-icon></div>
+      <div class="metric-body">
+        <span class="metric-label">Overdue Count</span>
+        <span class="metric-value">{{ metrics?.overdue_count ?? 0 }}</span>
+      </div>
+      <mat-icon class="metric-card__chevron">chevron_right</mat-icon>
     </div>
-  </div>
+  </app-card>
 
-  <div class="metric-card">
-    <div class="metric-icon active"><mat-icon>groups</mat-icon></div>
-    <div class="metric-body">
-      <span class="metric-label">Active Students</span>
-      <span class="metric-value">{{ metrics?.active_students_count ?? 0 }}</span>
+  <app-card class="metric-card">
+    <div class="metric-card__inner">
+      <span class="metric-rail active"></span>
+      <div class="metric-icon active"><mat-icon>groups</mat-icon></div>
+      <div class="metric-body">
+        <span class="metric-label">Active Students</span>
+        <span class="metric-value">{{ metrics?.active_students_count ?? 0 }}</span>
+      </div>
     </div>
-  </div>
+  </app-card>
 </div>

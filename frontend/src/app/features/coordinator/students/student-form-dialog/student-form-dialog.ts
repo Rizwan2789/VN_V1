@@ -37,10 +37,6 @@ export class StudentFormDialog {
 
   readonly form = this.fb.group({
     full_name: [this.data.student?.full_name ?? '', Validators.required],
-    roll_no: [
-      { value: this.data.student?.roll_no ?? '', disabled: this.isEdit },
-      Validators.required,
-    ],
     batch_id: [this.data.student?.batch.id ?? this.data.batches[0]?.id ?? null, Validators.required],
     email: [this.data.student?.email ?? ''],
     phone: [this.data.student?.phone ?? ''],
@@ -71,7 +67,7 @@ export class StudentFormDialog {
     if (this.isEdit) {
       this.dialogRef.close(base as StudentUpdate);
     } else {
-      this.dialogRef.close({ ...base, roll_no: raw.roll_no! } as StudentCreate);
+      this.dialogRef.close(base as StudentCreate);
     }
   }
 

@@ -8,7 +8,6 @@ from app.schemas.batch import BatchResponse
 
 class StudentCreate(BaseModel):
     full_name: str
-    roll_no: str
     batch_id: int
     email: str | None = None
     phone: str | None = None

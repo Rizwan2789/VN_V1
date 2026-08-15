@@ -8,7 +8,7 @@ from app.db.base import Base
 
 class User(Base):
     __tablename__ = "users"
-    __table_args__ = (CheckConstraint("role IN ('coordinator', 'student')", name="ck_users_role"),)
+    __table_args__ = (CheckConstraint("role IN ('coordinator', 'student', 'admin')", name="ck_users_role"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
     login_id: Mapped[str] = mapped_column(String(100), unique=True, nullable=False, index=True)

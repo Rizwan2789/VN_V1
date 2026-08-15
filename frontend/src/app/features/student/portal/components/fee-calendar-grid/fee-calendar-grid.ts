@@ -2,13 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
-import { FeeRecordWithPayments } from '../../../../../core/models/fee-record.model';
+import { FeeRecordWithPayments, MonthSelection } from '../../../../../core/models/fee-record.model';
 import { FeeDetailCell } from '../fee-detail-cell/fee-detail-cell';
-
-export interface MonthSelection {
-  month: number;
-  record: FeeRecordWithPayments | null;
-}
 
 @Component({
   selector: 'app-fee-calendar-grid',

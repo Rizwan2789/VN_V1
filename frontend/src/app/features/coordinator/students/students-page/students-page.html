@@ -1,0 +1,23 @@
+<app-app-header title="Students" [showMenuToggle]="true" />
+
+<main class="students-page-content">
+  <div class="table-card">
+    <app-student-list-table
+      [students]="students()"
+      [loading]="studentsLoading()"
+      [searchTerm]="searchTerm"
+      [statusFilter]="statusFilter"
+      [showClassFilter]="true"
+      [batches]="batches()"
+      [classFilter]="classFilter"
+      (searchTermChange)="onSearchTermChange($event)"
+      (statusFilterChange)="onStatusFilterChange($event)"
+      (classFilterChange)="onClassFilterChange($event)"
+      (addStudent)="openAddStudent()"
+      (editStudent)="editStudent($event)"
+      (manageFees)="manageFees($event)"
+      (deactivateStudent)="deactivateStudent($event)"
+      (exportCsv)="exportCsv()"
+    />
+  </div>
+</main>

@@ -1,0 +1,18 @@
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 0.5rem;
+  min-width: 380px;
+  max-width: 440px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.applicant-summary {
+  margin: 0;
+  color: var(--vn-gray-700);
+  font-size: 0.9rem;
+}

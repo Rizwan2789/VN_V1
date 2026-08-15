@@ -6,6 +6,7 @@
 @use '@angular/material' as mat;
 @use './styles/theme-colors' as vn-theme;
 @use './styles/variables';
+@use './styles/icons';
 
 html {
   height: 100%;
@@ -40,3 +41,18 @@ body {
   height: 100%;
 }
 /* You can add global styles to this file, and also import other style files */
+
+// Router navigations cross-fade via the native View Transitions API
+// (see withViewTransitions() in app.config.ts). Default browser duration
+// reads as an abrupt flicker, so slow it down slightly.
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.28s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}

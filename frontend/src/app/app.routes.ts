@@ -16,6 +16,16 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
   },
   {
+    path: 'signup',
+    canActivate: [guestGuard],
+    loadComponent: () => import('./features/auth/signup/signup').then((m) => m.Signup),
+  },
+  {
+    path: 'admin-recovery',
+    canActivate: [guestGuard],
+    loadComponent: () => import('./features/auth/admin-recovery/admin-recovery').then((m) => m.AdminRecovery),
+  },
+  {
     path: 'unauthorized',
     loadComponent: () =>
       import('./shared/components/unauthorized/unauthorized').then((m) => m.Unauthorized),
@@ -31,6 +41,12 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { role: 'student' },
     loadChildren: () => import('./features/student/student.routes').then((m) => m.STUDENT_ROUTES),
+  },
+  {
+    path: 'admin',
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'admin' },
+    loadChildren: () => import('./features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
   },
   { path: '**', redirectTo: '' },
 ];
