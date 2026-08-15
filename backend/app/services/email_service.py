@@ -4,6 +4,7 @@ import smtplib
 from abc import ABC, abstractmethod
 from email.message import EmailMessage
 
+import httpx
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
@@ -116,6 +117,52 @@ class SmtpEmailService(EmailService):
             smtp.send_message(message)
 
 
+class ResendEmailService(EmailService):
+    """Sends via the Resend HTTP API instead of raw SMTP — for hosts (like
+    Render's free tier) that block outbound SMTP ports entirely but always
+    allow outbound HTTPS. Natively async, no thread offload needed."""
+
+    async def send(
+        self,
+        db: AsyncSession,
+        *,
+        to_email: str,
+        subject: str,
+        body: str,
+        template_key: str | None = None,
+        related_user_id: int | None = None,
+    ) -> None:
+        settings = get_settings()
+        status = "SENT"
+        try:
+            async with httpx.AsyncClient(timeout=10) as client:
+                response = await client.post(
+                    "https://api.resend.com/emails",
+                    headers={"Authorization": f"Bearer {settings.resend_api_key}"},
+                    json={
+                        "from": settings.email_from_address,
+                        "to": [to_email],
+                        "subject": subject,
+                        "text": body,
+                    },
+                )
+                response.raise_for_status()
+        except Exception:
+            status = "FAILED"
+            logger.exception("Resend send failed: to=%s subject=%r", to_email, subject)
+
+        db.add(
+            EmailLog(
+                to_email=to_email,
+                subject=subject,
+                body=body,
+                template_key=template_key,
+                related_user_id=related_user_id,
+                status=status,
+            )
+        )
+
+
 def get_email_service() -> EmailService:
     """The one seam an EmailService backend gets wired in behind — swapping
     it is a new class + a new branch here, no call-site changes needed.
@@ -125,4 +172,6 @@ def get_email_service() -> EmailService:
         return LoggingEmailService()
     if settings.email_backend == "smtp":
         return SmtpEmailService()
+    if settings.email_backend == "resend":
+        return ResendEmailService()
     raise NotImplementedError(f"Unknown email backend: {settings.email_backend!r}")
