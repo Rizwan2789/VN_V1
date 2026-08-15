@@ -12,4 +12,9 @@ export class BatchService {
   list(): Observable<Batch[]> {
     return this.http.get<Batch[]>(`${environment.apiBaseUrl}/api/batches`);
   }
+
+  /** Public — no auth required, used by the self-signup page's class picker. */
+  listPublic(): Observable<Batch[]> {
+    return this.http.get<Batch[]>(`${environment.apiBaseUrl}/api/batches/public`);
+  }
 }

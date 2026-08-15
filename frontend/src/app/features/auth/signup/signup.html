@@ -1,0 +1,80 @@
+<div class="signup-shell">
+  <div class="signup-card">
+    <app-logo [size]="56" [ring]="true" class="brand-mark" />
+    <h1>Student Application</h1>
+    <p class="subtitle">
+      A coordinator will review your details and email your login once approved.
+    </p>
+
+    @if (!submitted()) {
+      <form [formGroup]="form" (ngSubmit)="submit()" class="signup-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Full Name</mat-label>
+          <input matInput formControlName="full_name" aria-label="Full Name" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Class Applying For</mat-label>
+          <mat-select formControlName="requested_batch_id" aria-label="Class Applying For">
+            @for (batch of batches(); track batch.id) {
+              <mat-option [value]="batch.id">{{ batch.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" aria-label="Email" />
+          <mat-hint>Your login details will be sent here once approved</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Phone (optional)</mat-label>
+          <input matInput formControlName="phone" aria-label="Phone" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Guardian Name (optional)</mat-label>
+          <input matInput formControlName="guardian_name" aria-label="Guardian Name" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Guardian Phone (optional)</mat-label>
+          <input matInput formControlName="guardian_phone" aria-label="Guardian Phone" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Address (optional)</mat-label>
+          <textarea matInput formControlName="address" rows="2" aria-label="Address"></textarea>
+        </mat-form-field>
+
+        @if (errorMessage(); as error) {
+          <p class="error-message">
+            <mat-icon class="vn-icon-sm">error_outline</mat-icon>
+            <span>{{ error }}</span>
+          </p>
+        }
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="submit-button"
+          appHoverLift
+          [disabled]="isSubmitting()"
+        >
+          {{ isSubmitting() ? 'Submitting…' : 'Submit Application' }}
+        </button>
+      </form>
+
+      <a routerLink="/login" class="back-link">Already have an account? Sign in</a>
+    } @else {
+      <div class="confirmation">
+        <mat-icon class="vn-icon-lg">mark_email_read</mat-icon>
+        <p>Your application has been submitted.</p>
+        <p class="confirmation-meta">A coordinator will review it and email your login details once approved.</p>
+        <a mat-flat-button color="primary" routerLink="/login">Back to Sign In</a>
+      </div>
+    }
+  </div>
+</div>

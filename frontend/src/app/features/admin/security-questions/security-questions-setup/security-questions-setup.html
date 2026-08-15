@@ -1,0 +1,45 @@
+<app-app-header title="Security Questions" [showMenuToggle]="true" />
+
+<main class="security-questions-content">
+  @if (!loading() && !allAnswered) {
+    <div class="setup-banner">
+      <mat-icon>warning</mat-icon>
+      <span>
+        Your forgot-password recovery won't work until every question below has an answer saved.
+      </span>
+    </div>
+  }
+
+  <div class="setup-card">
+    <p class="intro">
+      Answer all 5 questions. If you ever forget your password, you'll be asked one of these at
+      random to verify it's you before setting a new one. Answers are stored securely and can't be
+      viewed again — only re-entered here.
+    </p>
+
+    @if (loading()) {
+      <div class="loading-row">
+        <mat-spinner diameter="32" />
+      </div>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="save()" class="questions-form">
+        @for (question of questions(); track question.id) {
+          <mat-form-field appearance="outline">
+            <mat-label>{{ question.question_text }}</mat-label>
+            <input matInput [formControlName]="question.id" [attr.aria-label]="question.question_text" />
+            @if (question.is_answered) {
+              <mat-icon matSuffix class="vn-icon-sm answered-icon" matTooltip="Already answered">
+                check_circle
+              </mat-icon>
+            }
+            <mat-hint>{{ question.is_answered ? 'Already answered — leave blank to keep it unchanged' : 'Not yet answered' }}</mat-hint>
+          </mat-form-field>
+        }
+
+        <button mat-flat-button color="primary" type="submit" class="save-button" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : 'Save Answers' }}
+        </button>
+      </form>
+    }
+  </div>
+</main>

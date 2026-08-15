@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Approve Application</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content class="form-grid">
+    <p class="applicant-summary">
+      <strong>{{ data.request.full_name }}</strong> · {{ data.request.email }}
+    </p>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Class / Batch</mat-label>
+      <mat-select formControlName="batch_id" aria-label="Class / Batch">
+        @for (batch of data.batches; track batch.id) {
+          <mat-option [value]="batch.id">{{ batch.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Monthly Fee (Rs.)</mat-label>
+      <input matInput type="number" formControlName="monthly_fee_amount" aria-label="Monthly Fee" />
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button mat-flat-button color="primary" type="submit">Approve &amp; Create Account</button>
+  </mat-dialog-actions>
+</form>

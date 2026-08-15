@@ -1,0 +1,74 @@
+.admin-dashboard-content {
+  padding: 1.5rem;
+  min-height: calc(100vh - 64px);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metric-card__inner {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.1rem 1.25rem;
+}
+
+.metric-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: calc(var(--vn-radius-card) - 4px);
+  flex-shrink: 0;
+
+  &.coordinators {
+    background: color-mix(in srgb, var(--vn-primary) 12%, white);
+    mat-icon { color: var(--vn-primary); }
+  }
+  &.students {
+    background: color-mix(in srgb, var(--vn-status-paid) 12%, white);
+    mat-icon { color: var(--vn-status-paid); }
+  }
+  &.signups {
+    background: color-mix(in srgb, var(--vn-secondary) 14%, white);
+    mat-icon { color: color-mix(in srgb, var(--vn-secondary) 80%, black); }
+  }
+  &.resets {
+    background: color-mix(in srgb, var(--vn-status-overdue) 12%, white);
+    mat-icon { color: var(--vn-status-overdue); }
+  }
+}
+
+.metric-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.metric-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--vn-gray-500);
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--vn-text);
+  font-variant-numeric: tabular-nums;
+}

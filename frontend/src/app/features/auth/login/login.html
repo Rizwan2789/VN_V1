@@ -41,19 +41,22 @@
             <span class="tab-label"><mat-icon class="vn-icon-sm">school</mat-icon>Student</span>
           </ng-template>
         </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <span class="tab-label"><mat-icon class="vn-icon-sm">admin_panel_settings</mat-icon>Admin</span>
+          </ng-template>
+        </mat-tab>
       </mat-tab-group>
 
       <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
         <mat-form-field appearance="outline">
-          <mat-label>{{ selectedRole() === 'coordinator' ? 'Email' : 'Roll Number' }}</mat-label>
-          <mat-icon matPrefix class="vn-icon-sm field-icon">{{
-            selectedRole() === 'coordinator' ? 'mail' : 'badge'
-          }}</mat-icon>
+          <mat-label>{{ roleLoginField[selectedRole()].label }}</mat-label>
+          <mat-icon matPrefix class="vn-icon-sm field-icon">{{ roleLoginField[selectedRole()].icon }}</mat-icon>
           <input
             matInput
             formControlName="loginId"
             autocomplete="username"
-            [attr.aria-label]="selectedRole() === 'coordinator' ? 'Email' : 'Roll Number'"
+            [attr.aria-label]="roleLoginField[selectedRole()].label"
           />
         </mat-form-field>
 
@@ -77,6 +80,16 @@
             <mat-icon class="vn-icon-sm">{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
         </mat-form-field>
+
+        <div class="secondary-links">
+          @if (selectedRole() === 'student') {
+            <a routerLink="/signup" class="signup-link">New student? Apply for admission</a>
+          }
+
+          <button type="button" class="forgot-password-link" aria-label="Forgot password?" (click)="openForgotPassword()">
+            Forgot password?
+          </button>
+        </div>
 
         @if (errorMessage(); as error) {
           <p class="error-message">

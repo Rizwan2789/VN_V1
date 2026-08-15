@@ -1,0 +1,45 @@
+<app-app-header title="Admin Dashboard" [showMenuToggle]="true" />
+
+<main class="admin-dashboard-content">
+  <div class="metrics-grid">
+    <app-card class="metric-card">
+      <div class="metric-card__inner">
+        <div class="metric-icon coordinators"><mat-icon>supervisor_account</mat-icon></div>
+        <div class="metric-body">
+          <span class="metric-label">Coordinators</span>
+          <span class="metric-value">{{ counts()?.coordinator_count ?? 0 }}</span>
+        </div>
+      </div>
+    </app-card>
+
+    <app-card class="metric-card">
+      <div class="metric-card__inner">
+        <div class="metric-icon students"><mat-icon>school</mat-icon></div>
+        <div class="metric-body">
+          <span class="metric-label">Students</span>
+          <span class="metric-value">{{ counts()?.student_count ?? 0 }}</span>
+        </div>
+      </div>
+    </app-card>
+
+    <app-card class="metric-card">
+      <div class="metric-card__inner">
+        <div class="metric-icon signups"><mat-icon>person_add</mat-icon></div>
+        <div class="metric-body">
+          <span class="metric-label">Pending Signups</span>
+          <span class="metric-value">{{ counts()?.pending_signup_count ?? 0 }}</span>
+        </div>
+      </div>
+    </app-card>
+
+    <app-card class="metric-card">
+      <div class="metric-card__inner">
+        <div class="metric-icon resets"><mat-icon>lock_reset</mat-icon></div>
+        <div class="metric-body">
+          <span class="metric-label">Pending Password Requests</span>
+          <span class="metric-value">{{ counts()?.pending_reset_count ?? 0 }}</span>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</main>

@@ -4,7 +4,17 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
-from app.routers import auth, batches, dashboard, fees, payments, students
+from app.routers import (
+    admin,
+    auth,
+    batches,
+    dashboard,
+    fees,
+    password_reset_requests,
+    payments,
+    signup_requests,
+    students,
+)
 from app.scheduler import start_scheduler, stop_scheduler
 
 settings = get_settings()
@@ -33,6 +43,9 @@ app.include_router(students.router)
 app.include_router(fees.router)
 app.include_router(payments.router)
 app.include_router(dashboard.router)
+app.include_router(signup_requests.router)
+app.include_router(password_reset_requests.router)
+app.include_router(admin.router)
 
 
 @app.get("/api/health")
