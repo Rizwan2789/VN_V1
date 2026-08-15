@@ -19,7 +19,9 @@ class Settings(BaseSettings):
     cors_origins: list[str] = ["http://localhost:4200"]
 
     # "log" writes to the email_log table instead of really sending. "smtp"
-    # sends for real via SmtpEmailService (see app/services/email_service.py).
+    # sends via SmtpEmailService — works from most networks, but many hosts
+    # (Render's free tier included) block outbound SMTP ports entirely, in
+    # which case use "resend" (ResendEmailService), which sends over HTTPS.
     email_backend: str = "log"
     email_from_address: str = "no-reply@vistanova.example.com"
 
@@ -31,6 +33,11 @@ class Settings(BaseSettings):
     smtp_username: str = ""
     smtp_password: str = ""
     smtp_use_tls: bool = True
+
+    # Only read when email_backend == "resend". Get a key at resend.com —
+    # note the free tier can only send to your own account's email address
+    # until a sending domain is verified via DNS records in their dashboard.
+    resend_api_key: str = ""
 
     @field_validator("database_url")
     @classmethod
