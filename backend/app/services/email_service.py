@@ -104,8 +104,12 @@ class SmtpEmailService(EmailService):
         message["Subject"] = subject
         message.set_content(body)
 
-        with smtplib.SMTP(settings.smtp_host, settings.smtp_port, timeout=10) as smtp:
-            if settings.smtp_use_tls:
+        # Port 465 is implicit TLS (the whole connection is wrapped in SSL from
+        # the start) — a different smtplib class than port 587's plaintext-then-
+        # STARTTLS-upgrade. Some hosts block one mail port but not the other.
+        smtp_cls = smtplib.SMTP_SSL if settings.smtp_port == 465 else smtplib.SMTP
+        with smtp_cls(settings.smtp_host, settings.smtp_port, timeout=10) as smtp:
+            if settings.smtp_port != 465 and settings.smtp_use_tls:
                 smtp.starttls()
             if settings.smtp_username:
                 smtp.login(settings.smtp_username, settings.smtp_password)
