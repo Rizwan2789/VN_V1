@@ -8,12 +8,19 @@ from app.models.student import Student
 from app.models.user import User
 from app.schemas.signup_request import SignupRequestCreate
 from app.schemas.student import StudentCreate
+from app.services.admin_notification_service import notify_admins
 from app.services.email_service import EmailService
-from app.services.email_templates import credentials_email, signup_rejected_email
+from app.services.email_templates import (
+    credentials_email,
+    new_signup_request_notification,
+    signup_rejected_email,
+)
 from app.services.student_service import create_student_with_user
 
 
-async def create_signup_request(db: AsyncSession, payload: SignupRequestCreate) -> SignupRequest:
+async def create_signup_request(
+    db: AsyncSession, payload: SignupRequestCreate, *, email_service: EmailService
+) -> SignupRequest:
     request = SignupRequest(
         full_name=payload.full_name,
         email=payload.email,
@@ -25,6 +32,10 @@ async def create_signup_request(db: AsyncSession, payload: SignupRequestCreate) 
     )
     db.add(request)
     await db.flush()
+
+    subject, body = new_signup_request_notification(request.full_name, request.email)
+    await notify_admins(db, email_service, subject=subject, body=body, template_key="new_signup_request")
+
     return request
 
 
@@ -36,7 +47,6 @@ async def approve_signup_request(
     monthly_fee_amount: Decimal,
     admission_date: date | None,
     reviewer: User,
-    email_service: EmailService,
 ) -> tuple[Student, str]:
     student_payload = StudentCreate(
         full_name=request.full_name,
@@ -58,6 +68,20 @@ async def approve_signup_request(
     request.monthly_fee_amount = monthly_fee_amount
     request.requested_batch_id = batch_id
 
+    return student, temporary_password
+
+
+async def send_signup_credentials_email(
+    db: AsyncSession,
+    request: SignupRequest,
+    *,
+    student: Student,
+    temporary_password: str,
+    email_service: EmailService,
+) -> None:
+    """Fired only when the admin/coordinator explicitly clicks "Send Email"
+    after reviewing the generated credentials — approval itself no longer
+    emails automatically."""
     subject, body = credentials_email(request.full_name, student.roll_no, temporary_password)
     await email_service.send(
         db,
@@ -67,8 +91,6 @@ async def approve_signup_request(
         template_key="signup_approved_credentials",
         related_user_id=student.user_id,
     )
-
-    return student, temporary_password
 
 
 async def reject_signup_request(

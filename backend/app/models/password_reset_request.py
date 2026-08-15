@@ -50,3 +50,7 @@ class PasswordResetRequest(Base):
     @property
     def login_id(self) -> str:
         return self.user.login_id
+
+    @property
+    def email(self) -> str | None:
+        return self.user.email

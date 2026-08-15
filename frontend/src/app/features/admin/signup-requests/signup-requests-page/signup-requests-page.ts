@@ -100,6 +100,13 @@ export class SignupRequestsPage {
               title: 'Account Created',
               subtitle: `Credentials for ${created.student.full_name}`,
               fields,
+              sendEmail: created.student.email
+                ? {
+                    recipientEmail: created.student.email,
+                    action: () =>
+                      this.signupRequestService.sendCredentialsEmail(request.id, created.temporary_password),
+                  }
+                : undefined,
             },
           });
           this.loadRequests();

@@ -24,6 +24,10 @@ class AdminResetPasswordResponse(BaseModel):
     temporary_password: str
 
 
+class AdminSendResetEmail(BaseModel):
+    temporary_password: str
+
+
 class AdminDashboardCounts(BaseModel):
     coordinator_count: int
     student_count: int

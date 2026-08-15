@@ -26,6 +26,10 @@ class SignupRequestReject(BaseModel):
     reason: str | None = None
 
 
+class SignupRequestSendEmail(BaseModel):
+    temporary_password: str
+
+
 class SignupRequestResponse(BaseModel):
     id: int
     full_name: str

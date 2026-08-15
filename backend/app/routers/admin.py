@@ -13,9 +13,11 @@ from app.models.user import User
 from app.schemas.admin import (
     AdminDashboardCounts,
     AdminResetPasswordResponse,
+    AdminSendResetEmail,
     AdminUserListResponse,
 )
 from app.schemas.security_question import SecurityAnswersUpdate, SecurityQuestionStatus
+from app.services.admin_user_service import permanently_delete_user
 from app.services.email_service import get_email_service
 from app.services.email_templates import password_reset_approved_email
 from app.services.security_question_service import upsert_security_answers
@@ -56,7 +58,9 @@ async def reset_user_password(
     _=Depends(require_role("admin")),
 ) -> AdminResetPasswordResponse:
     """Direct reset — no approval loop, since admin *is* the approver here.
-    Always generates a brand-new password; never reveals the previous one."""
+    Always generates a brand-new password; never reveals the previous one.
+    Does not email automatically — the admin reviews it in the credentials
+    dialog and explicitly sends via /send-reset-email once satisfied."""
     user = await db.get(User, user_id)
     if user is None or user.role == "admin":
         raise HTTPException(status.HTTP_404_NOT_FOUND, "User not found")
@@ -64,19 +68,34 @@ async def reset_user_password(
     temporary_password = generate_temporary_password()
     user.hashed_password = hash_password(temporary_password)
 
-    if user.email:
-        subject, body = password_reset_approved_email(user.full_name, user.login_id, temporary_password)
-        await get_email_service().send(
-            db,
-            to_email=user.email,
-            subject=subject,
-            body=body,
-            template_key="password_reset_approved",
-            related_user_id=user.id,
-        )
-
     await db.commit()
     return AdminResetPasswordResponse(temporary_password=temporary_password)
+
+
+@router.post("/users/{user_id}/send-reset-email")
+async def send_reset_email(
+    user_id: int,
+    payload: AdminSendResetEmail,
+    db: AsyncSession = Depends(get_db),
+    _=Depends(require_role("admin")),
+) -> dict:
+    user = await db.get(User, user_id)
+    if user is None or user.role == "admin":
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "User not found")
+    if not user.email:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "This user has no email on file")
+
+    subject, body = password_reset_approved_email(user.full_name, user.login_id, payload.temporary_password)
+    await get_email_service().send(
+        db,
+        to_email=user.email,
+        subject=subject,
+        body=body,
+        template_key="password_reset_approved",
+        related_user_id=user.id,
+    )
+    await db.commit()
+    return {"message": "Email sent"}
 
 
 @router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -99,6 +118,30 @@ async def deactivate_user(
         student.is_active = False
 
     await db.commit()
+
+
+@router.delete("/users/{user_id}/permanent", status_code=status.HTTP_204_NO_CONTENT)
+async def permanently_delete_user_endpoint(
+    user_id: int,
+    db: AsyncSession = Depends(get_db),
+    _=Depends(require_role("admin")),
+) -> None:
+    """Only available once a user is deactivated — an extra confirmation
+    step before an irreversible action. Removes the user and their own
+    fee/payment/reset-request history; blocked if they've recorded payments
+    for someone else (see permanently_delete_user)."""
+    user = await db.get(User, user_id)
+    if user is None or user.role == "admin":
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "User not found")
+    if user.is_active:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Deactivate this user before permanently deleting them")
+
+    try:
+        await permanently_delete_user(db, user)
+        await db.commit()
+    except ValueError as exc:
+        await db.rollback()
+        raise HTTPException(status.HTTP_409_CONFLICT, str(exc))
 
 
 @router.get("/dashboard", response_model=AdminDashboardCounts)

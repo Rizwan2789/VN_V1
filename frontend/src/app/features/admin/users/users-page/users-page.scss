@@ -116,3 +116,11 @@
     --mat-icon-button-state-layer-color: var(--vn-status-overdue);
   }
 }
+
+.delete-action {
+  --mat-icon-button-icon-color: var(--vn-status-overdue);
+
+  &:hover {
+    --mat-icon-button-state-layer-color: var(--vn-status-overdue);
+  }
+}

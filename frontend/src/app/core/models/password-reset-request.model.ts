@@ -7,6 +7,7 @@ export interface PasswordResetRequest {
   user_id: number;
   full_name: string;
   login_id: string;
+  email: string | null;
   requested_role: UserRole;
   status: PasswordResetRequestStatus;
   reviewed_at: string | null;

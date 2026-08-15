@@ -52,3 +52,27 @@ def password_reset_rejected_email(full_name: str, reason: str | None) -> tuple[s
         "— Vista Nova Academy"
     )
     return subject, body
+
+
+def new_signup_request_notification(full_name: str, email: str) -> tuple[str, str]:
+    subject = "New signup application awaiting review"
+    body = (
+        f"A new signup application has been submitted:\n\n"
+        f"  Name: {full_name}\n"
+        f"  Email: {email}\n\n"
+        "Sign in to the admin dashboard to review it under Signup Requests.\n\n"
+        "— Vista Nova Academy"
+    )
+    return subject, body
+
+
+def new_password_reset_request_notification(full_name: str, login_id: str, role: str) -> tuple[str, str]:
+    subject = "New password reset request awaiting review"
+    body = (
+        f"A new password reset request has been submitted:\n\n"
+        f"  Name: {full_name}\n"
+        f"  Login: {login_id} ({role})\n\n"
+        "Sign in to the admin dashboard to review it under Password Reset Requests.\n\n"
+        "— Vista Nova Academy"
+    )
+    return subject, body
