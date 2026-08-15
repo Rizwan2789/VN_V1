@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import get_current_user, get_db, require_role
 from app.models.signup_request import SignupRequest
+from app.models.student import Student
 from app.models.user import User
 from app.schemas.signup_request import (
     SignupRequestApprove,
@@ -12,6 +13,7 @@ from app.schemas.signup_request import (
     SignupRequestListResponse,
     SignupRequestReject,
     SignupRequestResponse,
+    SignupRequestSendEmail,
 )
 from app.schemas.student import StudentCreatedResponse, StudentResponse
 from app.services.email_service import get_email_service
@@ -19,6 +21,7 @@ from app.services.signup_request_service import (
     approve_signup_request,
     create_signup_request,
     reject_signup_request,
+    send_signup_credentials_email,
 )
 
 router = APIRouter(prefix="/api/signup-requests", tags=["signup-requests"])
@@ -31,7 +34,7 @@ async def submit_signup_request(
 ) -> SignupRequest:
     """Public — a prospective student applies before any account exists."""
     try:
-        request = await create_signup_request(db, payload)
+        request = await create_signup_request(db, payload, email_service=get_email_service())
         await db.commit()
     except IntegrityError:
         await db.rollback()
@@ -99,7 +102,6 @@ async def approve_signup_request_endpoint(
             monthly_fee_amount=payload.monthly_fee_amount,
             admission_date=payload.admission_date,
             reviewer=current_user,
-            email_service=get_email_service(),
         )
         await db.commit()
     except IntegrityError:
@@ -125,6 +127,29 @@ async def approve_signup_request_endpoint(
         ),
         temporary_password=temporary_password,
     )
+
+
+@router.post("/{request_id}/send-credentials-email")
+async def send_signup_credentials_email_endpoint(
+    request_id: int,
+    payload: SignupRequestSendEmail,
+    db: AsyncSession = Depends(get_db),
+    _=Depends(require_role("coordinator", "admin")),
+) -> dict:
+    request = await _get_signup_request_or_404(db, request_id)
+    if request.status != "APPROVED" or request.resulting_student_id is None:
+        raise HTTPException(status.HTTP_409_CONFLICT, "This request has not been approved yet")
+
+    student = await db.get(Student, request.resulting_student_id)
+    await send_signup_credentials_email(
+        db,
+        request,
+        student=student,
+        temporary_password=payload.temporary_password,
+        email_service=get_email_service(),
+    )
+    await db.commit()
+    return {"message": "Email sent"}
 
 
 @router.post("/{request_id}/reject", response_model=SignupRequestResponse)

@@ -34,6 +34,12 @@ export class SignupRequestService {
     return this.http.post<StudentCreatedResponse>(`${this.baseUrl}/${id}/approve`, payload);
   }
 
+  sendCredentialsEmail(id: number, temporaryPassword: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.baseUrl}/${id}/send-credentials-email`, {
+      temporary_password: temporaryPassword,
+    });
+  }
+
   reject(id: number, reason?: string): Observable<SignupRequest> {
     return this.http.post<SignupRequest>(`${this.baseUrl}/${id}/reject`, { reason });
   }

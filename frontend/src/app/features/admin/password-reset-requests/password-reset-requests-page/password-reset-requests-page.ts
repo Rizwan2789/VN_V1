@@ -82,7 +82,17 @@ export class PasswordResetRequestsPage {
 
         this.dialog.open(CredentialsDialog, {
           width: '460px',
-          data: { title: 'Password Reset', subtitle: `New credentials for ${request.full_name}`, fields },
+          data: {
+            title: 'Password Reset',
+            subtitle: `New credentials for ${request.full_name}`,
+            fields,
+            sendEmail: request.email
+              ? {
+                  recipientEmail: request.email,
+                  action: () => this.resetRequestService.sendCredentialsEmail(request.id, res.temporary_password),
+                }
+              : undefined,
+          },
         });
         this.loadRequests();
       },

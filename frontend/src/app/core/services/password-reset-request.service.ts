@@ -30,6 +30,12 @@ export class PasswordResetRequestService {
     return this.http.post<{ temporary_password: string }>(`${this.baseUrl}/${id}/approve`, {});
   }
 
+  sendCredentialsEmail(id: number, temporaryPassword: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.baseUrl}/${id}/send-credentials-email`, {
+      temporary_password: temporaryPassword,
+    });
+  }
+
   reject(id: number, reason?: string): Observable<PasswordResetRequest> {
     return this.http.post<PasswordResetRequest>(`${this.baseUrl}/${id}/reject`, { reason });
   }

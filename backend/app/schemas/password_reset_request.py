@@ -12,11 +12,16 @@ class PasswordResetRequestReject(BaseModel):
     reason: str | None = None
 
 
+class PasswordResetSendEmail(BaseModel):
+    temporary_password: str
+
+
 class PasswordResetRequestResponse(BaseModel):
     id: int
     user_id: int
     full_name: str
     login_id: str
+    email: str | None
     requested_role: str
     status: str
     reviewed_at: datetime | None

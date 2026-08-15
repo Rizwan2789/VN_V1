@@ -18,11 +18,19 @@ class Settings(BaseSettings):
 
     cors_origins: list[str] = ["http://localhost:4200"]
 
-    # "log" writes to the email_log table instead of really sending — the only
-    # backend implemented today. A future "smtp" value is the one seam where
-    # real SMTP settings would get added, without touching any call site.
+    # "log" writes to the email_log table instead of really sending. "smtp"
+    # sends for real via SmtpEmailService (see app/services/email_service.py).
     email_backend: str = "log"
     email_from_address: str = "no-reply@vistanova.example.com"
+
+    # Only read when email_backend == "smtp". Gmail: smtp.gmail.com, port 587,
+    # smtp_username is the full @gmail.com address, smtp_password is a 16-char
+    # App Password (not the account password — see docs/email-setup.md).
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_username: str = ""
+    smtp_password: str = ""
+    smtp_use_tls: bool = True
 
     @field_validator("database_url")
     @classmethod

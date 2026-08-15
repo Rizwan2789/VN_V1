@@ -87,6 +87,17 @@
               >
                 <mat-icon class="vn-icon-sm">person_off</mat-icon>
               </button>
+            } @else {
+              <button
+                mat-icon-button
+                type="button"
+                class="delete-action"
+                matTooltip="Permanently delete user"
+                [attr.aria-label]="'Permanently delete ' + user.full_name"
+                (click)="permanentlyDelete(user)"
+              >
+                <mat-icon class="vn-icon-sm">delete_forever</mat-icon>
+              </button>
             }
           </td>
         </ng-container>

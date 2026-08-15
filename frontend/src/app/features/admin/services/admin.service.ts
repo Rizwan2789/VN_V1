@@ -29,8 +29,18 @@ export class AdminService {
     return this.http.post<{ temporary_password: string }>(`${this.baseUrl}/users/${userId}/reset-password`, {});
   }
 
+  sendResetEmail(userId: number, temporaryPassword: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.baseUrl}/users/${userId}/send-reset-email`, {
+      temporary_password: temporaryPassword,
+    });
+  }
+
   deactivateUser(userId: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/users/${userId}`);
+  }
+
+  permanentlyDeleteUser(userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/users/${userId}/permanent`);
   }
 
   getMySecurityQuestions(): Observable<SecurityQuestionStatus[]> {

@@ -11,12 +11,14 @@ from app.schemas.password_reset_request import (
     PasswordResetRequestListResponse,
     PasswordResetRequestReject,
     PasswordResetRequestResponse,
+    PasswordResetSendEmail,
 )
 from app.services.email_service import get_email_service
 from app.services.password_reset_service import (
     approve_reset_request,
     create_reset_request,
     reject_reset_request,
+    send_reset_credentials_email,
 )
 
 router = APIRouter(prefix="/api/password-reset-requests", tags=["password-reset-requests"])
@@ -32,7 +34,9 @@ async def submit_password_reset_request(
     """Public. Always returns the same generic response regardless of whether
     login_id/role matched a real account — avoids leaking account existence,
     same as auth.py's login handler."""
-    await create_reset_request(db, role=payload.role, login_id=payload.login_id)
+    await create_reset_request(
+        db, role=payload.role, login_id=payload.login_id, email_service=get_email_service()
+    )
     await db.commit()
     return _GENERIC_SUBMITTED_MESSAGE
 
@@ -78,11 +82,29 @@ async def approve_password_reset_request(
     if request.status != "PENDING":
         raise HTTPException(status.HTTP_409_CONFLICT, "This request has already been reviewed")
 
-    temporary_password = await approve_reset_request(
-        db, request, reviewer=current_user, email_service=get_email_service()
-    )
+    temporary_password = await approve_reset_request(db, request, reviewer=current_user)
     await db.commit()
     return PasswordResetApprovedResponse(temporary_password=temporary_password)
+
+
+@router.post("/{request_id}/send-credentials-email")
+async def send_reset_credentials_email_endpoint(
+    request_id: int,
+    payload: PasswordResetSendEmail,
+    db: AsyncSession = Depends(get_db),
+    _=Depends(require_role("admin")),
+) -> dict:
+    request = await _get_reset_request_or_404(db, request_id)
+    if request.status != "APPROVED":
+        raise HTTPException(status.HTTP_409_CONFLICT, "This request has not been approved yet")
+    if not request.email:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "This user has no email on file")
+
+    await send_reset_credentials_email(
+        db, request, temporary_password=payload.temporary_password, email_service=get_email_service()
+    )
+    await db.commit()
+    return {"message": "Email sent"}
 
 
 @router.post("/{request_id}/reject", response_model=PasswordResetRequestResponse)

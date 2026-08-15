@@ -93,7 +93,17 @@ export class UsersPage {
 
       this.dialog.open(CredentialsDialog, {
         width: '460px',
-        data: { title: 'Password Reset', subtitle: `New credentials for ${user.full_name}`, fields },
+        data: {
+          title: 'Password Reset',
+          subtitle: `New credentials for ${user.full_name}`,
+          fields,
+          sendEmail: user.email
+            ? {
+                recipientEmail: user.email,
+                action: () => this.adminService.sendResetEmail(user.id, res.temporary_password),
+              }
+            : undefined,
+        },
       });
     });
   }
@@ -108,6 +118,30 @@ export class UsersPage {
       },
       error: () => {
         this.snackBar.open('Could not deactivate this user.', 'Dismiss', { duration: 5000 });
+      },
+    });
+  }
+
+  permanentlyDelete(user: AdminUserListItem): void {
+    if (
+      !confirm(
+        `Permanently delete ${user.full_name}? This cannot be undone — their account and records will be removed.`,
+      )
+    ) {
+      return;
+    }
+
+    this.adminService.permanentlyDeleteUser(user.id).subscribe({
+      next: () => {
+        this.snackBar.open(`${user.full_name} permanently deleted.`, 'Dismiss', { duration: 4000 });
+        this.loadUsers();
+      },
+      error: (err) => {
+        this.snackBar.open(
+          err?.error?.detail ?? 'Could not permanently delete this user.',
+          'Dismiss',
+          { duration: 6000 },
+        );
       },
     });
   }

@@ -6,12 +6,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.security import hash_password
 from app.models.password_reset_request import PasswordResetRequest
 from app.models.user import User
+from app.services.admin_notification_service import notify_admins
 from app.services.email_service import EmailService
-from app.services.email_templates import password_reset_approved_email, password_reset_rejected_email
+from app.services.email_templates import (
+    new_password_reset_request_notification,
+    password_reset_approved_email,
+    password_reset_rejected_email,
+)
 from app.services.student_service import generate_temporary_password
 
 
-async def create_reset_request(db: AsyncSession, *, role: str, login_id: str) -> None:
+async def create_reset_request(db: AsyncSession, *, role: str, login_id: str, email_service: EmailService) -> None:
     """Always completes without signaling whether a matching account exists —
     continues the same anti-enumeration pattern as auth.py's login handler.
     """
@@ -31,13 +36,15 @@ async def create_reset_request(db: AsyncSession, *, role: str, login_id: str) ->
 
     db.add(PasswordResetRequest(user_id=user.id, requested_role=role))
 
+    subject, body = new_password_reset_request_notification(user.full_name, user.login_id, role)
+    await notify_admins(db, email_service, subject=subject, body=body, template_key="new_password_reset_request")
+
 
 async def approve_reset_request(
     db: AsyncSession,
     request: PasswordResetRequest,
     *,
     reviewer: User,
-    email_service: EmailService,
 ) -> str:
     user = await db.get(User, request.user_id)
     temporary_password = generate_temporary_password()
@@ -47,18 +54,29 @@ async def approve_reset_request(
     request.reviewed_by_user_id = reviewer.id
     request.reviewed_at = datetime.now(timezone.utc)
 
-    if user.email:
-        subject, body = password_reset_approved_email(user.full_name, user.login_id, temporary_password)
-        await email_service.send(
-            db,
-            to_email=user.email,
-            subject=subject,
-            body=body,
-            template_key="password_reset_approved",
-            related_user_id=user.id,
-        )
-
     return temporary_password
+
+
+async def send_reset_credentials_email(
+    db: AsyncSession,
+    request: PasswordResetRequest,
+    *,
+    temporary_password: str,
+    email_service: EmailService,
+) -> None:
+    """Fired only when the admin explicitly clicks "Send Email" after
+    reviewing the generated password — approval itself no longer emails
+    automatically. Caller must have already checked user.email is set."""
+    user = await db.get(User, request.user_id)
+    subject, body = password_reset_approved_email(user.full_name, user.login_id, temporary_password)
+    await email_service.send(
+        db,
+        to_email=user.email,
+        subject=subject,
+        body=body,
+        template_key="password_reset_approved",
+        related_user_id=user.id,
+    )
 
 
 async def reject_reset_request(
